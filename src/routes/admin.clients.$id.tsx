@@ -221,7 +221,7 @@ function Client360() {
                   key={n.key}
                   onClick={() => setTab(n.tab)}
                   className={cn(
-                    "group absolute left-1/2 top-1/2 flex w-[104px] flex-col items-center gap-1 rounded-xl border border-border glass-panel p-2.5 text-center transition-all duration-300 animate-rise-in hover:-translate-y-1 hover:border-primary/50 hover:shadow-glow",
+                    "group absolute left-1/2 top-1/2 flex w-[104px] flex-col items-center gap-1 rounded-xl border border-border glass-panel p-2.5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-glow",
                   )}
                   style={{
                     transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) translateZ(30px)`,

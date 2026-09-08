@@ -38,16 +38,16 @@ export function BrandLockup({
   if (compact) return <BrandMark className={className} />;
 
   return (
-    <span className={cn("flex items-center gap-3", className)}>
-      <span className="hidden sm:flex flex-col leading-none">
+    <span className={cn("flex min-w-0 items-center gap-3", className)}>
+      <span className="hidden min-w-0 sm:flex flex-col leading-none">
         <img
           src={lockup.url}
           alt="Centre 3D"
           width={220}
           height={59}
-          className="h-8 w-auto object-contain dark:brightness-125 dark:contrast-[1.05]"
+          className="h-7 w-auto max-w-[168px] object-contain object-left dark:brightness-125"
         />
-        <span className="mt-1.5 pl-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        <span className="mt-1.5 truncate pl-0.5 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
           {subtitle}
         </span>
       </span>
@@ -55,3 +55,4 @@ export function BrandLockup({
     </span>
   );
 }
+

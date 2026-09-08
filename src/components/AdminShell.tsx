@@ -67,7 +67,7 @@ const NAV: { group: string; items: { to: string; label: string; icon: typeof Gau
     group: "Offre",
     items: [
       { to: "/admin/catalogue", label: "Catalogue", icon: LayoutGrid },
-      { to: "/admin/fournisseurs", label: "Fournisseurs \{ to: "/admin/disponibilite", label: "Disponibilité", icon: CalendarRange } stock", icon: Truck },
+      { to: "/admin/fournisseurs", label: "Fournisseurs & stock", icon: Truck },
     ],
   },
   {

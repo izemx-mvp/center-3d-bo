@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Building2, Search, Users, Wallet } from "lucide-react";
 import { PageHeader, Panel, KpiCard } from "@/components/ui-kit";
 import { DataTable, type Column } from "@/components/DataTable";
@@ -8,12 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CITIES, clients, formatDate, formatMAD, type Client } from "@/lib/data";
 
-export const Route = createFileRoute("/admin/clients")({
+
+export const Route = createFileRoute("/admin/clients/")({
   head: () => ({
     meta: [
-      { title: "Clients — AGRIMACH" },
+      { title: "Clients — CENTRE 3D" },
       { name: "description", content: "Base clients complète : segments, chiffre d'affaires, commandes et commercial référent." },
-      { property: "og:title", content: "Base clients — AGRIMACH" },
+      { property: "og:title", content: "Base clients — CENTRE 3D" },
       { property: "og:description", content: "42 clients actifs, segmentation et suivi du chiffre d'affaires." },
     ],
   }),
@@ -23,9 +24,11 @@ export const Route = createFileRoute("/admin/clients")({
 const ALL = "__all__";
 
 function ClientsPage() {
+  const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [segment, setSegment] = useState(ALL);
   const [city, setCity] = useState(ALL);
+
 
   const rows = useMemo(
     () =>
@@ -104,7 +107,13 @@ function ClientsPage() {
             </SelectContent>
           </Select>
         </div>
-        <DataTable rows={rows} columns={columns} pageSize={10} />
+        <DataTable
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          onRowClick={(c) => navigate({ to: "/admin/clients/$id", params: { id: c.id } })}
+        />
+
       </Panel>
     </div>
   );

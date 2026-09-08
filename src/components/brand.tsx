@@ -1,44 +1,69 @@
 import { cn } from "@/lib/utils";
+import mark from "@/assets/centre3d-mark.png.asset.json";
+import lockup from "@/assets/centre3d-lockup.png.asset.json";
 
-export function BrandMark({ className }: { className?: string }) {
+/** Cube isométrique Centre 3D — logo fourni, jamais redessiné. */
+export function BrandMark({ className }: { className?: string | undefined }) {
   return (
     <span
       className={cn(
-        "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg gradient-primary text-primary-foreground shadow-glow",
+        "relative inline-flex h-9 w-9 shrink-0 items-center justify-center",
         className,
       )}
     >
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M4 17.5h16" strokeLinecap="round" />
-        <circle cx="7.5" cy="17.5" r="2.5" />
-        <circle cx="17" cy="17.5" r="3.5" />
-        <path d="M6 15V9.5A1.5 1.5 0 0 1 7.5 8H12l2 4h3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M9.5 5.5 12 3l2.5 2.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <span
+        aria-hidden
+        className="absolute inset-0 rounded-xl bg-primary/15 blur-md dark:bg-primary-glow/25"
+      />
+      <img
+        src={mark.url}
+        alt="Centre 3D"
+        width={72}
+        height={72}
+        className="relative h-full w-full object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)]"
+      />
     </span>
   );
 }
 
 export function BrandLockup({
   className,
-  subtitle = "Agricultural Machinery Trading",
+  subtitle = "Machines & équipements agricoles",
   compact = false,
+  onDark = false,
 }: {
   className?: string;
   subtitle?: string;
   compact?: boolean;
+  onDark?: boolean;
 }) {
+  if (compact) return <BrandMark className={className} />;
+
   return (
-    <span className={cn("flex items-center gap-3", className)}>
-      <BrandMark />
-      {!compact && (
-        <span className="flex flex-col leading-none">
-          <span className="font-display text-base font-bold tracking-tight">AGRIMACH</span>
-          <span className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            {subtitle}
-          </span>
+    <span className={cn("flex min-w-0 items-center gap-3", className)}>
+      <span className="hidden min-w-0 sm:flex flex-col leading-none">
+        <img
+          src={lockup.url}
+          alt="Centre 3D"
+          width={220}
+          height={59}
+          className={cn(
+            "h-7 w-auto max-w-[150px] object-contain object-left",
+            onDark ? "brightness-[1.75] saturate-[1.15]" : "dark:brightness-[1.6] dark:saturate-[1.1]",
+          )}
+        />
+        <span
+          className={cn(
+            "mt-1.5 truncate pl-0.5 text-[10px] uppercase tracking-[0.16em]",
+            onDark ? "text-current opacity-70" : "text-muted-foreground",
+          )}
+        >
+          {subtitle}
         </span>
-      )}
+      </span>
+      <span className="sm:hidden"><BrandMark /></span>
     </span>
   );
 }
+
+

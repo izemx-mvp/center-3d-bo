@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/client/commandes")({
   head: () => ({
     meta: [
-      { title: "Mes commandes — AGRIMACH" },
+      { title: "Mes commandes — CENTRE 3D" },
       { name: "description", content: "Suivez vos commandes de machines agricoles étape par étape, de la confirmation à la livraison sur votre exploitation." },
-      { property: "og:title", content: "Mes commandes — AGRIMACH" },
+      { property: "og:title", content: "Mes commandes — CENTRE 3D" },
       { property: "og:description", content: "Suivi logistique et paiement de vos commandes." },
     ],
   }),

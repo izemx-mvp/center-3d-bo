@@ -78,7 +78,7 @@ export function LoginScreen({ space }: Props) {
           <BrandLockup subtitle={space === "admin" ? "Espace commercial" : "Espace client"} />
           <div className="max-w-md animate-rise-in">
             <p className="text-[11px] uppercase tracking-[0.25em] text-primary-foreground/55">
-              AGRIMACH International
+              CENTRE 3D International
             </p>
             <p className="mt-4 font-display text-3xl font-semibold leading-tight">{copy.quote}</p>
             <div className="mt-8 flex gap-8 border-t border-primary-foreground/15 pt-6 text-sm text-primary-foreground/70">
@@ -96,7 +96,7 @@ export function LoginScreen({ space }: Props) {
               </div>
             </div>
           </div>
-          <p className="text-xs text-primary-foreground/45">© 2026 AGRIMACH International Ltd.</p>
+          <p className="text-xs text-primary-foreground/45">© 2026 CENTRE 3D International Ltd.</p>
         </div>
       </div>
 

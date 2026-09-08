@@ -15,9 +15,9 @@ import { CHANNELS, clients, formatDate } from "@/lib/data";
 export const Route = createFileRoute("/admin/communication")({
   head: () => ({
     meta: [
-      { title: "Communication multicanale — AGRIMACH" },
+      { title: "Communication multicanale — CENTRE 3D" },
       { name: "description", content: "Campagnes email, WhatsApp et SMS vers les clients et prospects, avec modèles de messages et historique d'envoi." },
-      { property: "og:title", content: "Communication multicanale — AGRIMACH" },
+      { property: "og:title", content: "Communication multicanale — CENTRE 3D" },
       { property: "og:description", content: "Pilotez vos campagnes email, WhatsApp et SMS depuis un seul écran." },
     ],
   }),

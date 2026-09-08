@@ -20,15 +20,15 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CATEGORIES, CITIES, formatMAD, machines } from "@/lib/data";
 
-export const Route = createFileRoute("/admin/catalogue")({
+export const Route = createFileRoute("/admin/catalogue/")({
   head: () => ({
     meta: [
-      { title: "Catalogue machines — AGRIMACH" },
+      { title: "Catalogue machines — CENTRE 3D" },
       {
         name: "description",
         content: "Catalogue complet des machines agricoles importées : tracteurs, moissonneuses, semoirs, pulvérisateurs et irrigation.",
       },
-      { property: "og:title", content: "Catalogue machines agricoles — AGRIMACH" },
+      { property: "og:title", content: "Catalogue machines agricoles — CENTRE 3D" },
       { property: "og:description", content: "34 machines disponibles au Maroc et en Europe, avec prix, disponibilité et fiches techniques." },
     ],
   }),

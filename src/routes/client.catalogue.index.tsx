@@ -12,12 +12,12 @@ import { useApp } from "@/lib/app-state";
 import { CATEGORIES, CITIES, formatMAD, machineById, machines } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/client/catalogue")({
+export const Route = createFileRoute("/client/catalogue/")({
   head: () => ({
     meta: [
-      { title: "Catalogue machines agricoles — Espace client AGRIMACH" },
+      { title: "Catalogue machines agricoles — Espace client CENTRE 3D" },
       { name: "description", content: "Parcourez les tracteurs, moissonneuses, semoirs et systèmes d'irrigation disponibles, comparez-les et demandez un devis." },
-      { property: "og:title", content: "Catalogue machines agricoles — AGRIMACH" },
+      { property: "og:title", content: "Catalogue machines agricoles — CENTRE 3D" },
       { property: "og:description", content: "Comparez les machines, vérifiez la disponibilité et demandez un devis en ligne." },
     ],
   }),

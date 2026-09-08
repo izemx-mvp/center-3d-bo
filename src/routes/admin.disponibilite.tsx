@@ -11,9 +11,9 @@ import { CATEGORIES, CITIES, formatMAD, machines, type Machine } from "@/lib/dat
 export const Route = createFileRoute("/admin/disponibilite")({
   head: () => ({
     meta: [
-      { title: "Disponibilité & stock — AGRIMACH" },
+      { title: "Disponibilité & stock — CENTRE 3D" },
       { name: "description", content: "Pilotage de la disponibilité des machines : stock par ville, réservations, alertes de rupture et délais de réapprovisionnement." },
-      { property: "og:title", content: "Disponibilité & stock — AGRIMACH" },
+      { property: "og:title", content: "Disponibilité & stock — CENTRE 3D" },
       { property: "og:description", content: "Stock temps réel des machines agricoles par dépôt et par catégorie." },
     ],
   }),

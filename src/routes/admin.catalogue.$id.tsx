@@ -11,12 +11,12 @@ import { formatMAD, machineById, machines } from "@/lib/data";
 export const Route = createFileRoute("/admin/catalogue/$id")({
   head: () => ({
     meta: [
-      { title: "Fiche machine — AGRIMACH" },
+      { title: "Fiche machine — CENTRE 3D" },
       {
         name: "description",
         content: "Fiche machine détaillée : galerie, caractéristiques techniques, prix, disponibilité et assistant IA contextualisé.",
       },
-      { property: "og:title", content: "Fiche machine agricole — AGRIMACH" },
+      { property: "og:title", content: "Fiche machine agricole — CENTRE 3D" },
       { property: "og:description", content: "Caractéristiques, prix et disponibilité de la machine sélectionnée." },
     ],
   }),

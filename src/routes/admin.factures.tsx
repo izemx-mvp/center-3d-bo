@@ -20,9 +20,9 @@ import { formatDate, formatMAD, type Invoice } from "@/lib/data";
 export const Route = createFileRoute("/admin/factures")({
   head: () => ({
     meta: [
-      { title: "Factures — AGRIMACH" },
+      { title: "Factures — CENTRE 3D" },
       { name: "description", content: "Facturation complète : montants HT, TVA, TTC, échéances et relances des factures en retard." },
-      { property: "og:title", content: "Factures — AGRIMACH" },
+      { property: "og:title", content: "Factures — CENTRE 3D" },
       { property: "og:description", content: "Gestion de la facturation et du recouvrement client." },
     ],
   }),

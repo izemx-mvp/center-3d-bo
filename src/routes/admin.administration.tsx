@@ -17,9 +17,9 @@ import { SALES_REPS, formatDate } from "@/lib/data";
 export const Route = createFileRoute("/admin/administration")({
   head: () => ({
     meta: [
-      { title: "Administration — AGRIMACH" },
+      { title: "Administration — CENTRE 3D" },
       { name: "description", content: "Paramétrage de la plateforme : utilisateurs, rôles et permissions, configuration de l'agent IA et journal d'activité." },
-      { property: "og:title", content: "Administration — AGRIMACH" },
+      { property: "og:title", content: "Administration — CENTRE 3D" },
       { property: "og:description", content: "Gérez les utilisateurs, les rôles et le comportement de l'agent IA." },
     ],
   }),
@@ -50,7 +50,7 @@ function AdministrationPage() {
   const [autoQualify, setAutoQualify] = useState(true);
   const [autoTransfer, setAutoTransfer] = useState(true);
   const [prompt, setPrompt] = useState(
-    "Tu es le conseiller commercial virtuel d'AGRIMACH, importateur de machines agricoles. Qualifie chaque visiteur : besoin, surface exploitée, budget, ville, délai. Recommande une machine du catalogue et propose un devis.",
+    "Tu es le conseiller commercial virtuel d'CENTRE 3D, importateur de machines agricoles. Qualifie chaque visiteur : besoin, surface exploitée, budget, ville, délai. Recommande une machine du catalogue et propose un devis.",
   );
 
   return (

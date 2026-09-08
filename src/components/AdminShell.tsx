@@ -192,7 +192,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         >
           <div className={cn("flex h-16 items-center border-b border-sidebar-border px-4", collapsed && "justify-center px-0")}>
             <Link to="/admin" className="text-sidebar-foreground">
-              <BrandLockup compact={collapsed} subtitle="Espace commercial" />
+              <BrandLockup compact={collapsed} onDark subtitle="Espace commercial" />
             </Link>
           </div>
           <NavLinks collapsed={collapsed} />

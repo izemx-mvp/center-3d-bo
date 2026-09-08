@@ -13,9 +13,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/admin/conversations")({
   head: () => ({
     meta: [
-      { title: "Conversations IA — AGRIMACH" },
+      { title: "Conversations IA — CENTRE 3D" },
       { name: "description", content: "Suivi en direct des conversations de l'agent IA : qualification, intentions détectées et transfert au commercial." },
-      { property: "og:title", content: "Conversations IA — AGRIMACH" },
+      { property: "og:title", content: "Conversations IA — CENTRE 3D" },
       { property: "og:description", content: "24 conversations qualifiées par l'agent IA multicanal." },
     ],
   }),

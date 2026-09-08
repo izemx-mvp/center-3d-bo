@@ -11,9 +11,9 @@ import { formatDate, formatMAD, machineById } from "@/lib/data";
 export const Route = createFileRoute("/client/demandes")({
   head: () => ({
     meta: [
-      { title: "Mes demandes de devis — AGRIMACH" },
+      { title: "Mes demandes de devis — CENTRE 3D" },
       { name: "description", content: "Suivez l'avancement de vos demandes de devis de machines agricoles et la réponse de votre conseiller." },
-      { property: "og:title", content: "Mes demandes de devis — AGRIMACH" },
+      { property: "og:title", content: "Mes demandes de devis — CENTRE 3D" },
       { property: "og:description", content: "Historique et statut de vos demandes de devis." },
     ],
   }),

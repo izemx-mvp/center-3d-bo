@@ -9,9 +9,9 @@ import heroTractor from "@/assets/hero-tractor.jpg";
 export const Route = createFileRoute("/client/")({
   head: () => ({
     meta: [
-      { title: "Mon espace client — AGRIMACH" },
+      { title: "Mon espace client — CENTRE 3D" },
       { name: "description", content: "Suivez vos demandes, devis, commandes et factures de machines agricoles depuis un espace unique." },
-      { property: "og:title", content: "Mon espace client — AGRIMACH" },
+      { property: "og:title", content: "Mon espace client — CENTRE 3D" },
       { property: "og:description", content: "Vue d'ensemble de vos achats de machines agricoles : devis, commandes, livraisons et factures." },
     ],
   }),

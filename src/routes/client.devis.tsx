@@ -12,9 +12,9 @@ import { formatDate, formatMAD, type Quote } from "@/lib/data";
 export const Route = createFileRoute("/client/devis")({
   head: () => ({
     meta: [
-      { title: "Mes devis — AGRIMACH" },
+      { title: "Mes devis — CENTRE 3D" },
       { name: "description", content: "Consultez vos devis machines agricoles, acceptez-les en ligne ou négociez les conditions avec votre conseiller." },
-      { property: "og:title", content: "Mes devis — AGRIMACH" },
+      { property: "og:title", content: "Mes devis — CENTRE 3D" },
       { property: "og:description", content: "Acceptez ou négociez vos devis en quelques clics." },
     ],
   }),

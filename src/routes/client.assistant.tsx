@@ -11,9 +11,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/client/assistant")({
   head: () => ({
     meta: [
-      { title: "Assistant IA — AGRIMACH" },
+      { title: "Assistant IA — CENTRE 3D" },
       { name: "description", content: "Décrivez votre exploitation et laissez l'assistant IA recommander la machine agricole adaptée, avec prix et disponibilité." },
-      { property: "og:title", content: "Assistant IA agricole — AGRIMACH" },
+      { property: "og:title", content: "Assistant IA agricole — CENTRE 3D" },
       { property: "og:description", content: "Conseil personnalisé et recommandation de machines en temps réel." },
     ],
   }),
@@ -56,7 +56,7 @@ function ClientAssistant() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "ai",
-      text: "Bonjour ! Je suis l'assistant AGRIMACH. Décrivez-moi votre exploitation — surface, culture, budget, ville — et je vous recommanderai la machine la plus adaptée.",
+      text: "Bonjour ! Je suis l'assistant CENTRE 3D. Décrivez-moi votre exploitation — surface, culture, budget, ville — et je vous recommanderai la machine la plus adaptée.",
     },
   ]);
   const [draft, setDraft] = useState("");
@@ -102,7 +102,7 @@ function ClientAssistant() {
                 >
                   {m.role === "ai" && (
                     <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
-                      <Sparkles className="h-3 w-3" /> Assistant AGRIMACH
+                      <Sparkles className="h-3 w-3" /> Assistant CENTRE 3D
                     </span>
                   )}
                   <p className="leading-relaxed">{m.text}</p>

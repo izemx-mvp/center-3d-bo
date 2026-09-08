@@ -3,7 +3,7 @@ import mark from "@/assets/centre3d-mark.png.asset.json";
 import lockup from "@/assets/centre3d-lockup.png.asset.json";
 
 /** Cube isométrique Centre 3D — logo fourni, jamais redessiné. */
-export function BrandMark({ className }: { className?: string }) {
+export function BrandMark({ className }: { className?: string | undefined }) {
   return (
     <span
       className={cn(

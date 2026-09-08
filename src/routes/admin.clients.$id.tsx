@@ -201,7 +201,7 @@ function Client360() {
 
             {/* noyau client */}
             <div
-              className="absolute left-1/2 top-1/2 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-2xl border border-primary/30 glass-panel text-center shadow-elevated"
+              className="absolute left-1/2 top-1/2 flex h-32 w-32 flex-col items-center justify-center rounded-2xl border border-primary/30 glass-panel text-center shadow-elevated"
               style={{ transform: "translate(-50%, -50%) translateZ(60px)" }}
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[image:var(--gradient-primary)] text-xs font-bold text-primary-foreground">

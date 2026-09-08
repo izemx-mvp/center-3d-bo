@@ -45,7 +45,7 @@ export function BrandLockup({
           alt="Centre 3D"
           width={220}
           height={59}
-          className="h-7 w-auto max-w-[168px] object-contain object-left dark:brightness-125"
+          className="h-7 w-auto max-w-[150px] object-contain object-left dark:brightness-125"
         />
         <span className="mt-1.5 truncate pl-0.5 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
           {subtitle}

@@ -63,6 +63,7 @@ const NAV: { group: string; items: { to: string; label: string; icon: typeof Gau
       { to: "/admin/clients", label: "Clients", icon: Users },
       { to: "/admin/conversations", label: "Conversations IA", icon: MessageSquare, badge: "6" },
       { to: "/admin/communication", label: "Communication", icon: Radio },
+      { to: "/admin/service-client", label: "Service client IA", icon: Headset },
     ],
   },
   {

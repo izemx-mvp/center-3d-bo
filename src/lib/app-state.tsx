@@ -8,12 +8,16 @@ import {
   prospects as seedProspects,
   quotes as seedQuotes,
   machines,
+  suppliers as seedSuppliers,
   type DemandeItem,
   type Invoice,
+  type Machine,
   type Order,
   type Payment,
   type Prospect,
+  type PurchaseOrder,
   type Quote,
+  type Supplier,
 } from "./data";
 
 /* ---------------- Auth ---------------- */
@@ -84,6 +88,18 @@ interface AppContextValue {
   registerPayment: (orderId: string, amount: number) => Payment | undefined;
   generateInvoice: (orderId: string) => Invoice | undefined;
   updateProspectStatus: (id: string, status: Prospect["status"]) => void;
+  catalogue: Machine[];
+  suppliers: Supplier[];
+  purchaseOrders: PurchaseOrder[];
+  addMachine: (input: Omit<Machine, "id" | "demand">) => Machine;
+  updateMachine: (id: string, patch: Partial<Machine>) => void;
+  deleteMachine: (id: string) => void;
+  adjustStock: (id: string, delta: number) => void;
+  createPurchaseOrder: (
+    input: Omit<PurchaseOrder, "id" | "createdAt" | "totalHT" | "vat" | "totalTTC" | "status"> & {
+      status?: PurchaseOrder["status"];
+    },
+  ) => PurchaseOrder;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -102,6 +118,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [invoices, setInvoices] = useState<Invoice[]>(seedInvoices);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [compare, setCompare] = useState<string[]>([]);
+  const [catalogue, setCatalogue] = useState<Machine[]>(machines);
+  const [suppliers] = useState<Supplier[]>(seedSuppliers);
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
 
   useEffect(() => {
     try {
@@ -271,8 +290,51 @@ export function AppProvider({ children }: { children: ReactNode }) {
       },
       updateProspectStatus: (id, status) =>
         setProspects((ps) => ps.map((p) => (p.id === id ? { ...p, status } : p))),
+      catalogue,
+      suppliers,
+      purchaseOrders,
+      addMachine: (input) => {
+        const machine: Machine = { ...input, id: `MCH-${2000 + catalogue.length}`, demand: 50 };
+        setCatalogue((c) => [machine, ...c]);
+        return machine;
+      },
+      updateMachine: (id, patch) =>
+        setCatalogue((c) => c.map((m) => (m.id === id ? { ...m, ...patch } : m))),
+      deleteMachine: (id) => setCatalogue((c) => c.filter((m) => m.id !== id)),
+      adjustStock: (id, delta) =>
+        setCatalogue((c) =>
+          c.map((m) => {
+            if (m.id !== id) return m;
+            const stock = Math.max(0, m.stock + delta);
+            return {
+              ...m,
+              stock,
+              availability: stock === 0 ? "Indisponible" : m.availability === "Indisponible" ? "Disponible" : m.availability,
+            };
+          }),
+        ),
+      createPurchaseOrder: (input) => {
+        const totalHT = input.lines.reduce((s, l) => s + l.unitCost * l.quantity, 0);
+        const vat = totalHT * 0.2;
+        const po: PurchaseOrder = {
+          ...input,
+          status: input.status ?? "Envoyé",
+          id: `BC-${3200 + purchaseOrders.length}`,
+          totalHT,
+          vat,
+          totalTTC: totalHT + vat,
+          createdAt: new Date().toISOString(),
+        };
+        setPurchaseOrders((p) => [po, ...p]);
+        input.lines.forEach((l) => {
+          setCatalogue((c) =>
+            c.map((m) => (m.id === l.machineId ? { ...m, stock: m.stock + l.quantity, availability: "Prochainement" } : m)),
+          );
+        });
+        return po;
+      },
     }),
-    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare],
+    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare, catalogue, suppliers, purchaseOrders],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

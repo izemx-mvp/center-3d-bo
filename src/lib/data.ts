@@ -729,3 +729,125 @@ export const notifications = [
   { icon: "alert", text: "Le devis DEV-2048 expire demain.", time: "il y a 3 h" },
   { icon: "stock", text: "Moissonneuse Harvest 9200 bientôt en rupture de disponibilité.", time: "hier" },
 ];
+
+/* ------------------------------------------------------------------ */
+/* Fournisseurs & approvisionnement                                    */
+/* ------------------------------------------------------------------ */
+
+export interface Supplier {
+  id: string;
+  name: string;
+  brands: string[];
+  contactName: string;
+  email: string;
+  phone: string;
+  city: string;
+  country: string;
+  incoterm: string;
+  leadTimeDays: number;
+  paymentTerms: string;
+  rating: number;
+  since: string;
+}
+
+export const suppliers: Supplier[] = [
+  {
+    id: "FRN-100",
+    name: "AgriMech Europe SA",
+    brands: ["AgriMech", "TerraPro"],
+    contactName: "Lucas Meyer",
+    email: "achats@agrimech-europe.com",
+    phone: "+33 4 72 55 18 90",
+    city: "Lyon",
+    country: "France",
+    incoterm: "CIF Casablanca",
+    leadTimeDays: 45,
+    paymentTerms: "30 % à la commande, solde à l'expédition",
+    rating: 4.8,
+    since: "2018",
+  },
+  {
+    id: "FRN-101",
+    name: "TerraPro Iberica",
+    brands: ["TerraPro", "FieldMaster"],
+    contactName: "Ana Ferrer",
+    email: "compras@terrapro-iberica.es",
+    phone: "+34 96 331 44 21",
+    city: "Valence",
+    country: "Espagne",
+    incoterm: "FOB Valence",
+    leadTimeDays: 30,
+    paymentTerms: "Virement à 45 jours",
+    rating: 4.5,
+    since: "2020",
+  },
+  {
+    id: "FRN-102",
+    name: "Harvest Industries GmbH",
+    brands: ["HarvestLine", "GrainTech"],
+    contactName: "Jonas Richter",
+    email: "orders@harvest-industries.de",
+    phone: "+49 511 22 88 40",
+    city: "Hanovre",
+    country: "Allemagne",
+    incoterm: "CIF Tanger Med",
+    leadTimeDays: 60,
+    paymentTerms: "Lettre de crédit irrévocable",
+    rating: 4.9,
+    since: "2016",
+  },
+  {
+    id: "FRN-103",
+    name: "Atlas Agri Équipement",
+    brands: ["AtlasAgri", "IrriMax"],
+    contactName: "Youssef Amrani",
+    email: "commandes@atlasagri.ma",
+    phone: "+212 5 22 47 11 08",
+    city: "Casablanca",
+    country: "Maroc",
+    incoterm: "Franco dépôt",
+    leadTimeDays: 12,
+    paymentTerms: "Chèque à 60 jours",
+    rating: 4.3,
+    since: "2019",
+  },
+  {
+    id: "FRN-104",
+    name: "IrriMax Solutions",
+    brands: ["IrriMax", "AquaField"],
+    contactName: "Sara El Fassi",
+    email: "supply@irrimax.ma",
+    phone: "+212 5 37 68 92 14",
+    city: "Rabat",
+    country: "Maroc",
+    incoterm: "Franco chantier",
+    leadTimeDays: 18,
+    paymentTerms: "50 % acompte, solde à la livraison",
+    rating: 4.6,
+    since: "2021",
+  },
+];
+
+export interface PurchaseLine {
+  machineId: string;
+  machineName: string;
+  quantity: number;
+  unitCost: number;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  recipient: string;
+  subject: string;
+  message: string;
+  lines: PurchaseLine[];
+  totalHT: number;
+  vat: number;
+  totalTTC: number;
+  expectedDate: string;
+  deliverySite: string;
+  status: "Envoyé" | "Brouillon" | "Confirmé" | "Reçu";
+  createdAt: string;
+}

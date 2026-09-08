@@ -4,7 +4,7 @@ import {
   BarChart3,
   Bell,
   Boxes,
-  CalendarRange,
+  Truck,
   ChevronLeft,
   FileText,
   Gauge,
@@ -67,7 +67,7 @@ const NAV: { group: string; items: { to: string; label: string; icon: typeof Gau
     group: "Offre",
     items: [
       { to: "/admin/catalogue", label: "Catalogue", icon: LayoutGrid },
-      { to: "/admin/disponibilite", label: "Disponibilité", icon: CalendarRange },
+      { to: "/admin/fournisseurs", label: "Fournisseurs & stock", icon: Truck },
     ],
   },
   {

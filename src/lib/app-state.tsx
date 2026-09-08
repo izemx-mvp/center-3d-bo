@@ -9,7 +9,12 @@ import {
   quotes as seedQuotes,
   machines,
   suppliers as seedSuppliers,
+  serviceOffers as seedServices,
+  faqItems as seedFaqs,
+  documentItems as seedDocuments,
   type DemandeItem,
+  type DocumentItem,
+  type FaqItem,
   type Invoice,
   type Machine,
   type Order,
@@ -17,6 +22,7 @@ import {
   type Prospect,
   type PurchaseOrder,
   type Quote,
+  type ServiceOffer,
   type Supplier,
 } from "./data";
 

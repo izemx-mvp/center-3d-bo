@@ -9,7 +9,12 @@ import {
   quotes as seedQuotes,
   machines,
   suppliers as seedSuppliers,
+  serviceOffers as seedServices,
+  faqItems as seedFaqs,
+  documentItems as seedDocuments,
   type DemandeItem,
+  type DocumentItem,
+  type FaqItem,
   type Invoice,
   type Machine,
   type Order,
@@ -17,6 +22,7 @@ import {
   type Prospect,
   type PurchaseOrder,
   type Quote,
+  type ServiceOffer,
   type Supplier,
 } from "./data";
 
@@ -100,6 +106,18 @@ interface AppContextValue {
       status?: PurchaseOrder["status"];
     },
   ) => PurchaseOrder;
+  services: ServiceOffer[];
+  faqs: FaqItem[];
+  documents: DocumentItem[];
+  addService: (input: Omit<ServiceOffer, "id">) => ServiceOffer;
+  updateService: (id: string, patch: Partial<ServiceOffer>) => void;
+  deleteService: (id: string) => void;
+  addFaq: (input: Omit<FaqItem, "id" | "views" | "updatedAt">) => FaqItem;
+  updateFaq: (id: string, patch: Partial<FaqItem>) => void;
+  deleteFaq: (id: string) => void;
+  addDocument: (input: Omit<DocumentItem, "id" | "updatedAt">) => DocumentItem;
+  updateDocument: (id: string, patch: Partial<DocumentItem>) => void;
+  deleteDocument: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -109,6 +127,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [lang, setLang] = useState<"FR" | "EN" | "AR">("FR");
+
+  const [services, setServices] = useState<ServiceOffer[]>(seedServices);
+  const [faqs, setFaqs] = useState<FaqItem[]>(seedFaqs);
+  const [documents, setDocuments] = useState<DocumentItem[]>(seedDocuments);
 
   const [prospects, setProspects] = useState<Prospect[]>(seedProspects);
   const [demandes, setDemandes] = useState<DemandeItem[]>(seedDemandes);
@@ -333,8 +355,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
         });
         return po;
       },
+      services,
+      faqs,
+      documents,
+      addService: (input) => {
+        const service: ServiceOffer = { ...input, id: `SRV-${400 + services.length}` };
+        setServices((s) => [service, ...s]);
+        return service;
+      },
+      updateService: (id, patch) => setServices((s) => s.map((x) => (x.id === id ? { ...x, ...patch } : x))),
+      deleteService: (id) => setServices((s) => s.filter((x) => x.id !== id)),
+      addFaq: (input) => {
+        const faq: FaqItem = { ...input, id: `FAQ-${500 + faqs.length}`, views: 0, updatedAt: new Date().toISOString() };
+        setFaqs((f) => [faq, ...f]);
+        return faq;
+      },
+      updateFaq: (id, patch) =>
+        setFaqs((f) => f.map((x) => (x.id === id ? { ...x, ...patch, updatedAt: new Date().toISOString() } : x))),
+      deleteFaq: (id) => setFaqs((f) => f.filter((x) => x.id !== id)),
+      addDocument: (input) => {
+        const doc: DocumentItem = { ...input, id: `DOC-${600 + documents.length}`, updatedAt: new Date().toISOString() };
+        setDocuments((d) => [doc, ...d]);
+        return doc;
+      },
+      updateDocument: (id, patch) =>
+        setDocuments((d) => d.map((x) => (x.id === id ? { ...x, ...patch, updatedAt: new Date().toISOString() } : x))),
+      deleteDocument: (id) => setDocuments((d) => d.filter((x) => x.id !== id)),
     }),
-    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare, catalogue, suppliers, purchaseOrders],
+    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare, catalogue, suppliers, purchaseOrders, services, faqs, documents],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

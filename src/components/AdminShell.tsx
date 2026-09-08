@@ -5,7 +5,9 @@ import {
   Bell,
   Boxes,
   Truck,
+  ChevronDown,
   ChevronLeft,
+  Headset,
   FileText,
   Gauge,
   Inbox,
@@ -61,6 +63,7 @@ const NAV: { group: string; items: { to: string; label: string; icon: typeof Gau
       { to: "/admin/clients", label: "Clients", icon: Users },
       { to: "/admin/conversations", label: "Conversations IA", icon: MessageSquare, badge: "6" },
       { to: "/admin/communication", label: "Communication", icon: Radio },
+      { to: "/admin/service-client", label: "Service client IA", icon: Headset },
     ],
   },
   {
@@ -88,68 +91,82 @@ const NAV: { group: string; items: { to: string; label: string; icon: typeof Gau
 
 function NavLinks({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isActive = (to: string) => (to === "/admin" ? pathname === "/admin" : pathname.startsWith(to));
+  const activeGroup = NAV.find((g) => g.items.some((i) => isActive(i.to)))?.group;
+  const [closed, setClosed] = useState<string[]>([]);
+
   return (
-    <nav className="flex flex-1 flex-col gap-5 overflow-y-auto px-3 py-4">
-      {NAV.map((group) => (
-        <div key={group.group}>
-          {!collapsed && (
-            <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
-              {group.group}
-            </p>
-          )}
-          <ul className="space-y-1">
-            {group.items.map((item) => {
-              const active =
-                item.to === "/admin" ? pathname === "/admin" : pathname.startsWith(item.to);
-              const Icon = item.icon;
-              const link = (
-                <Link
-                  to={item.to}
-                  onClick={onNavigate}
-                  className={cn(
-                    "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
-                    active
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                      : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
-                    collapsed && "justify-center px-0",
-                  )}
-                >
-                  {active && (
-                    <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
-                  )}
-                  <Icon
+    <nav className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 py-4">
+      {NAV.map((group) => {
+        const open = collapsed || !closed.includes(group.group) || group.group === activeGroup;
+        return (
+          <div key={group.group}>
+            {!collapsed && (
+              <button
+                type="button"
+                aria-expanded={open}
+                onClick={() =>
+                  setClosed((c) => (c.includes(group.group) ? c.filter((g) => g !== group.group) : [...c, group.group]))
+                }
+                className="mb-1 flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45 transition-colors hover:bg-sidebar-accent/40 hover:text-sidebar-foreground/80"
+              >
+                <span className="truncate">{group.group}</span>
+                <ChevronDown className={cn("ml-auto h-3.5 w-3.5 transition-transform duration-200", !open && "-rotate-90")} />
+              </button>
+            )}
+            <ul className={cn("space-y-1 overflow-hidden transition-all duration-200", !open && "hidden")}>
+              {group.items.map((item) => {
+                const active = isActive(item.to);
+                const Icon = item.icon;
+                const link = (
+                  <Link
+                    to={item.to}
+                    onClick={onNavigate}
                     className={cn(
-                      "h-[18px] w-[18px] shrink-0 transition-colors",
-                      active ? "text-sidebar-primary" : "text-sidebar-foreground/60",
+                      "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
+                      active
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                        : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
+                      collapsed && "justify-center px-0",
                     )}
-                  />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                  {!collapsed && item.badge && (
-                    <span className="ml-auto rounded-full bg-sidebar-primary/15 px-2 py-0.5 text-[10px] font-semibold text-sidebar-primary">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-              return (
-                <li key={item.to}>
-                  {collapsed ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>{link}</TooltipTrigger>
-                      <TooltipContent side="right">
-                        {item.label}
-                        {item.badge ? ` · ${item.badge}` : ""}
-                      </TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    link
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+                  >
+                    {active && (
+                      <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
+                    )}
+                    <Icon
+                      className={cn(
+                        "h-[18px] w-[18px] shrink-0 transition-colors",
+                        active ? "text-sidebar-primary" : "text-sidebar-foreground/60",
+                      )}
+                    />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                    {!collapsed && item.badge && (
+                      <span className="ml-auto rounded-full bg-sidebar-primary/15 px-2 py-0.5 text-[10px] font-semibold text-sidebar-primary">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+                return (
+                  <li key={item.to}>
+                    {collapsed ? (
+                      <Tooltip>
+                        <TooltipTrigger asChild>{link}</TooltipTrigger>
+                        <TooltipContent side="right">
+                          {item.label}
+                          {item.badge ? ` · ${item.badge}` : ""}
+                        </TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      link
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })}
     </nav>
   );
 }

@@ -214,26 +214,32 @@ function Client360() {
             {/* satellites */}
             {nodes.map((n, i) => {
               const rad = (n.angle * Math.PI) / 180;
-              const x = Math.cos(rad) * 225;
-              const y = Math.sin(rad) * 155;
+              const x = Math.cos(rad) * 235;
+              const y = Math.sin(rad) * 160;
               return (
-                <button
+                <div
                   key={n.key}
-                  onClick={() => setTab(n.tab)}
-                  className={cn(
-                    "group absolute left-1/2 top-1/2 flex w-[104px] flex-col items-center gap-1 rounded-xl border border-border glass-panel p-2.5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-glow",
-                  )}
+                  className="absolute left-1/2 top-1/2 animate-fade-in"
                   style={{
                     transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) translateZ(30px)`,
                     animationDelay: `${i * 70}ms`,
                   }}
                 >
-                  <n.icon className="h-4 w-4 text-primary transition-transform group-hover:scale-110" />
-                  <span className="font-display text-base font-bold leading-none">{n.count}</span>
-                  <span className="text-[10px] uppercase tracking-wide text-muted-foreground">{n.label}</span>
-                </button>
+                  <button
+                    onClick={() => setTab(n.tab)}
+                    className={cn(
+                      "group flex w-[108px] flex-col items-center gap-1 rounded-xl border border-border glass-panel p-2.5 text-center transition-all duration-300",
+                      "hover:scale-[1.06] hover:border-primary/50 hover:shadow-glow",
+                    )}
+                  >
+                    <n.icon className="h-4 w-4 text-primary transition-transform group-hover:scale-110" />
+                    <span className="font-display text-base font-bold leading-none">{n.count}</span>
+                    <span className="text-[10px] uppercase tracking-wide text-muted-foreground">{n.label}</span>
+                  </button>
+                </div>
               );
             })}
+
           </div>
         </div>
       </Panel>

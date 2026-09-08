@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { ArrowLeft, Heart, MapPin } from "lucide-react";
+import { ArrowLeft, Heart, MapPin, Minus, Plus, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader, Panel, StatusPill } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/client/catalogue/$id")({
 
 function ClientMachineDetail() {
   const { id } = useParams({ from: "/client/catalogue/$id" });
-  const { favorites, toggleFavorite, createDemande } = useApp();
+  const { favorites, toggleFavorite, createDemande, addToCart } = useApp();
   const navigate = useNavigate();
   const machine = machineById(id);
   const [open, setOpen] = useState(false);
@@ -105,7 +105,27 @@ function ClientMachineDetail() {
             <p className="mt-4 flex items-center gap-2 rounded-lg bg-surface px-3 py-2 text-sm">
               <MapPin className="h-4 w-4 text-primary" /> Disponible à {machine.city}, {machine.country}
             </p>
-            <Button className="mt-5 w-full gradient-primary text-primary-foreground" onClick={() => setOpen(true)}>
+            <div className="mt-5 flex items-center gap-2">
+              <div className="flex items-center gap-1 rounded-lg border border-border p-1">
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Diminuer" onClick={() => setQuantity((q) => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                <span className="w-8 text-center text-sm font-semibold">{quantity}</span>
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Augmenter" onClick={() => setQuantity((q) => q + 1)}><Plus className="h-4 w-4" /></Button>
+              </div>
+              <Button
+                className="flex-1 gradient-primary text-primary-foreground shadow-glow"
+                disabled={machine.availability === "Indisponible"}
+                onClick={() => {
+                  addToCart(machine.id, quantity);
+                  toast.success("Ajouté au panier", {
+                    description: `${quantity} × ${machine.name}`,
+                    action: { label: "Voir le panier", onClick: () => navigate({ to: "/client/panier" }) },
+                  });
+                }}
+              >
+                <ShoppingCart className="mr-2 h-4 w-4" /> Ajouter au panier
+              </Button>
+            </div>
+            <Button variant="outline" className="mt-2 w-full" onClick={() => setOpen(true)}>
               Demander un devis personnalisé
             </Button>
           </Panel>

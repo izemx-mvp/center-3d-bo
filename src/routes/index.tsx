@@ -61,7 +61,7 @@ function SpaceSelector() {
 
       <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-8 md:px-8">
         <header className="flex items-center justify-between">
-          <BrandLockup className="text-primary-foreground" subtitle="Londres · Maroc · Europe" />
+          <BrandLockup onDark className="text-primary-foreground" subtitle="Londres · Maroc · Europe" />
           <span className="hidden items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/5 px-3 py-1.5 text-xs backdrop-blur md:inline-flex">
             <Sparkles className="h-3.5 w-3.5" />
             Qualification commerciale assistée par IA

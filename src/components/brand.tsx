@@ -30,10 +30,12 @@ export function BrandLockup({
   className,
   subtitle = "Machines & équipements agricoles",
   compact = false,
+  onDark = false,
 }: {
   className?: string;
   subtitle?: string;
   compact?: boolean;
+  onDark?: boolean;
 }) {
   if (compact) return <BrandMark className={className} />;
 
@@ -45,9 +47,17 @@ export function BrandLockup({
           alt="Centre 3D"
           width={220}
           height={59}
-          className="h-7 w-auto max-w-[150px] object-contain object-left dark:brightness-125"
+          className={cn(
+            "h-7 w-auto max-w-[150px] object-contain object-left",
+            onDark ? "brightness-[1.75] saturate-[1.15]" : "dark:brightness-[1.6] dark:saturate-[1.1]",
+          )}
         />
-        <span className="mt-1.5 truncate pl-0.5 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+        <span
+          className={cn(
+            "mt-1.5 truncate pl-0.5 text-[10px] uppercase tracking-[0.16em]",
+            onDark ? "text-current opacity-70" : "text-muted-foreground",
+          )}
+        >
           {subtitle}
         </span>
       </span>
@@ -55,4 +65,5 @@ export function BrandLockup({
     </span>
   );
 }
+
 

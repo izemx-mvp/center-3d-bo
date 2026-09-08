@@ -355,8 +355,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
         });
         return po;
       },
+      services,
+      faqs,
+      documents,
+      addService: (input) => {
+        const service: ServiceOffer = { ...input, id: `SRV-${400 + services.length}` };
+        setServices((s) => [service, ...s]);
+        return service;
+      },
+      updateService: (id, patch) => setServices((s) => s.map((x) => (x.id === id ? { ...x, ...patch } : x))),
+      deleteService: (id) => setServices((s) => s.filter((x) => x.id !== id)),
+      addFaq: (input) => {
+        const faq: FaqItem = { ...input, id: `FAQ-${500 + faqs.length}`, views: 0, updatedAt: new Date().toISOString() };
+        setFaqs((f) => [faq, ...f]);
+        return faq;
+      },
+      updateFaq: (id, patch) =>
+        setFaqs((f) => f.map((x) => (x.id === id ? { ...x, ...patch, updatedAt: new Date().toISOString() } : x))),
+      deleteFaq: (id) => setFaqs((f) => f.filter((x) => x.id !== id)),
+      addDocument: (input) => {
+        const doc: DocumentItem = { ...input, id: `DOC-${600 + documents.length}`, updatedAt: new Date().toISOString() };
+        setDocuments((d) => [doc, ...d]);
+        return doc;
+      },
+      updateDocument: (id, patch) =>
+        setDocuments((d) => d.map((x) => (x.id === id ? { ...x, ...patch, updatedAt: new Date().toISOString() } : x))),
+      deleteDocument: (id) => setDocuments((d) => d.filter((x) => x.id !== id)),
     }),
-    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare, catalogue, suppliers, purchaseOrders],
+    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare, catalogue, suppliers, purchaseOrders, services, faqs, documents],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

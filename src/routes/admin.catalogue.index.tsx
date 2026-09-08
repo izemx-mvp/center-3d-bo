@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ImagePlus, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { Coins, FileWarning, ImagePlus, LayoutGrid, Pencil, Plus, Search, Tags, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader, Panel, FilterChips, StatusPill, KpiCard } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";

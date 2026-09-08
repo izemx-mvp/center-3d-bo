@@ -851,3 +851,219 @@ export interface PurchaseOrder {
   status: "Envoyé" | "Brouillon" | "Confirmé" | "Reçu";
   createdAt: string;
 }
+
+/* ------------------------------------------------------------------ */
+/* Service client IA : prestations, FAQ et documents                    */
+/* ------------------------------------------------------------------ */
+
+export interface ServiceOffer {
+  id: string;
+  name: string;
+  category: "Maintenance" | "Formation" | "Financement" | "Livraison" | "Garantie";
+  description: string;
+  price: number;
+  unit: string;
+  sla: string;
+  active: boolean;
+}
+
+export const serviceOffers: ServiceOffer[] = [
+  {
+    id: "SRV-300",
+    name: "Maintenance préventive annuelle",
+    category: "Maintenance",
+    description:
+      "Quatre visites techniques par an sur site : contrôle moteur, hydraulique, transmission et remplacement des filtres d'usure.",
+    price: 18500,
+    unit: "par machine / an",
+    sla: "Intervention sous 48 h",
+    active: true,
+  },
+  {
+    id: "SRV-301",
+    name: "Assistance dépannage 7j/7",
+    category: "Maintenance",
+    description:
+      "Hotline technique et déplacement d'un technicien Centre 3D sur l'exploitation, pièces courantes incluses.",
+    price: 9800,
+    unit: "par machine / an",
+    sla: "Intervention sous 24 h",
+    active: true,
+  },
+  {
+    id: "SRV-302",
+    name: "Formation conducteurs & réglages",
+    category: "Formation",
+    description:
+      "Deux journées de formation sur l'exploitation : prise en main, réglages agronomiques, sécurité et entretien quotidien.",
+    price: 7200,
+    unit: "par session (8 personnes)",
+    sla: "Planifiée sous 15 jours",
+    active: true,
+  },
+  {
+    id: "SRV-303",
+    name: "Financement leasing agricole",
+    category: "Financement",
+    description:
+      "Montage d'un dossier de leasing 24 à 60 mois avec nos partenaires bancaires, apport à partir de 15 %.",
+    price: 0,
+    unit: "offert à la commande",
+    sla: "Réponse sous 5 jours ouvrés",
+    active: true,
+  },
+  {
+    id: "SRV-304",
+    name: "Livraison & mise en service",
+    category: "Livraison",
+    description:
+      "Transport porte-engins jusqu'à l'exploitation, montage des équipements et essais en conditions réelles.",
+    price: 4500,
+    unit: "par livraison",
+    sla: "Sous 7 jours après paiement",
+    active: true,
+  },
+  {
+    id: "SRV-305",
+    name: "Extension de garantie 3 ans",
+    category: "Garantie",
+    description: "Prolongation de la garantie constructeur pièces et main-d'œuvre jusqu'à 36 mois ou 3 000 heures.",
+    price: 22000,
+    unit: "par machine",
+    sla: "Activation immédiate",
+    active: false,
+  },
+];
+
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  category: "Commande" | "Livraison" | "Paiement" | "Technique" | "Garantie";
+  views: number;
+  published: boolean;
+  updatedAt: string;
+}
+
+export const faqItems: FaqItem[] = [
+  {
+    id: "FAQ-400",
+    question: "Quels sont les délais de livraison d'un tracteur importé ?",
+    answer:
+      "Pour une machine en stock à Casablanca, la livraison est assurée sous 7 jours. Pour une commande fournisseur en Europe, comptez 30 à 60 jours selon la marque et l'incoterm.",
+    category: "Livraison",
+    views: 412,
+    published: true,
+    updatedAt: "2026-08-14T10:00:00.000Z",
+  },
+  {
+    id: "FAQ-401",
+    question: "Proposez-vous un paiement en plusieurs fois ?",
+    answer:
+      "Oui. Nous proposons un acompte de 30 % à la commande puis un solde échelonné, ainsi qu'un leasing agricole 24 à 60 mois avec nos partenaires bancaires.",
+    category: "Paiement",
+    views: 358,
+    published: true,
+    updatedAt: "2026-08-22T09:30:00.000Z",
+  },
+  {
+    id: "FAQ-402",
+    question: "La garantie couvre-t-elle les pièces d'usure ?",
+    answer:
+      "La garantie constructeur couvre les pièces et la main-d'œuvre hors consommables (filtres, courroies, lubrifiants). L'extension 3 ans reprend les mêmes exclusions.",
+    category: "Garantie",
+    views: 221,
+    published: true,
+    updatedAt: "2026-07-30T14:15:00.000Z",
+  },
+  {
+    id: "FAQ-403",
+    question: "Comment obtenir un devis personnalisé ?",
+    answer:
+      "Depuis votre espace client, ouvrez le catalogue, sélectionnez la machine et cliquez sur « Demander un devis ». Un commercial Centre 3D vous répond sous 24 h ouvrées.",
+    category: "Commande",
+    views: 507,
+    published: true,
+    updatedAt: "2026-09-01T08:00:00.000Z",
+  },
+  {
+    id: "FAQ-404",
+    question: "Assurez-vous la maintenance hors zone Casablanca–Rabat ?",
+    answer:
+      "Oui, nos techniciens itinérants couvrent Fès, Meknès, Marrakech, Agadir, Kénitra et Oujda. Un forfait déplacement s'applique au-delà de 150 km.",
+    category: "Technique",
+    views: 164,
+    published: false,
+    updatedAt: "2026-08-05T16:45:00.000Z",
+  },
+];
+
+export interface DocumentItem {
+  id: string;
+  name: string;
+  type: "Fiche technique" | "Manuel" | "Contrat" | "Certificat" | "Tarifs";
+  category: string;
+  fileType: "PDF" | "DOCX" | "XLSX";
+  sizeKb: number;
+  url: string;
+  visibility: "Public" | "Clients" | "Interne";
+  updatedAt: string;
+}
+
+export const documentItems: DocumentItem[] = [
+  {
+    id: "DOC-500",
+    name: "Fiche technique — Tracteurs série X",
+    type: "Fiche technique",
+    category: "Tracteurs",
+    fileType: "PDF",
+    sizeKb: 1840,
+    url: "https://docs.centre3d.ma/fiches/tracteurs-serie-x.pdf",
+    visibility: "Public",
+    updatedAt: "2026-08-28T10:00:00.000Z",
+  },
+  {
+    id: "DOC-501",
+    name: "Manuel d'utilisation moissonneuse HarvestLine",
+    type: "Manuel",
+    category: "Moissonneuses",
+    fileType: "PDF",
+    sizeKb: 6420,
+    url: "https://docs.centre3d.ma/manuels/harvestline.pdf",
+    visibility: "Clients",
+    updatedAt: "2026-07-19T11:30:00.000Z",
+  },
+  {
+    id: "DOC-502",
+    name: "Contrat de maintenance préventive",
+    type: "Contrat",
+    category: "Services",
+    fileType: "DOCX",
+    sizeKb: 320,
+    url: "https://docs.centre3d.ma/contrats/maintenance-preventive.docx",
+    visibility: "Clients",
+    updatedAt: "2026-09-02T09:00:00.000Z",
+  },
+  {
+    id: "DOC-503",
+    name: "Certificat de conformité CE — Pulvérisateurs",
+    type: "Certificat",
+    category: "Pulvérisateurs",
+    fileType: "PDF",
+    sizeKb: 540,
+    url: "https://docs.centre3d.ma/certificats/pulverisateurs-ce.pdf",
+    visibility: "Public",
+    updatedAt: "2026-06-11T15:20:00.000Z",
+  },
+  {
+    id: "DOC-504",
+    name: "Grille tarifaire services 2026",
+    type: "Tarifs",
+    category: "Services",
+    fileType: "XLSX",
+    sizeKb: 210,
+    url: "https://docs.centre3d.ma/tarifs/services-2026.xlsx",
+    visibility: "Interne",
+    updatedAt: "2026-09-05T07:45:00.000Z",
+  },
+];

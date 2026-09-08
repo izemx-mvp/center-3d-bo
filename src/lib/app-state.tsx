@@ -106,6 +106,18 @@ interface AppContextValue {
       status?: PurchaseOrder["status"];
     },
   ) => PurchaseOrder;
+  services: ServiceOffer[];
+  faqs: FaqItem[];
+  documents: DocumentItem[];
+  addService: (input: Omit<ServiceOffer, "id">) => ServiceOffer;
+  updateService: (id: string, patch: Partial<ServiceOffer>) => void;
+  deleteService: (id: string) => void;
+  addFaq: (input: Omit<FaqItem, "id" | "views" | "updatedAt">) => FaqItem;
+  updateFaq: (id: string, patch: Partial<FaqItem>) => void;
+  deleteFaq: (id: string) => void;
+  addDocument: (input: Omit<DocumentItem, "id" | "updatedAt">) => DocumentItem;
+  updateDocument: (id: string, patch: Partial<DocumentItem>) => void;
+  deleteDocument: (id: string) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);

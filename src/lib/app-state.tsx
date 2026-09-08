@@ -128,6 +128,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [lang, setLang] = useState<"FR" | "EN" | "AR">("FR");
 
+  const [services, setServices] = useState<ServiceOffer[]>(seedServices);
+  const [faqs, setFaqs] = useState<FaqItem[]>(seedFaqs);
+  const [documents, setDocuments] = useState<DocumentItem[]>(seedDocuments);
+
   const [prospects, setProspects] = useState<Prospect[]>(seedProspects);
   const [demandes, setDemandes] = useState<DemandeItem[]>(seedDemandes);
   const [quotes, setQuotes] = useState<Quote[]>(seedQuotes);

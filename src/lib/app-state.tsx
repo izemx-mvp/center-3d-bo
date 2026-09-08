@@ -101,6 +101,9 @@ interface AppContextValue {
   updateProspectStatus: (id: string, status: Prospect["status"]) => void;
   catalogue: Machine[];
   suppliers: Supplier[];
+  addSupplier: (input: Omit<Supplier, "id">) => Supplier;
+  updateSupplier: (id: string, patch: Partial<Supplier>) => void;
+  deleteSupplier: (id: string) => void;
   purchaseOrders: PurchaseOrder[];
   addMachine: (input: Omit<Machine, "id" | "demand">) => Machine;
   updateMachine: (id: string, patch: Partial<Machine>) => void;
@@ -146,7 +149,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [compare, setCompare] = useState<string[]>([]);
   const [catalogue, setCatalogue] = useState<Machine[]>(machines);
-  const [suppliers] = useState<Supplier[]>(seedSuppliers);
+  const [suppliers, setSuppliers] = useState<Supplier[]>(seedSuppliers);
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
 
   useEffect(() => {
@@ -328,6 +331,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setProspects((ps) => ps.map((p) => (p.id === id ? { ...p, status } : p))),
       catalogue,
       suppliers,
+      addSupplier: (input) => {
+        const supplier: Supplier = { ...input, id: `FRN-${200 + suppliers.length}` };
+        setSuppliers((list) => [supplier, ...list]);
+        return supplier;
+      },
+      updateSupplier: (id, patch) => setSuppliers((list) => list.map((s) => (s.id === id ? { ...s, ...patch } : s))),
+      deleteSupplier: (id) => setSuppliers((list) => list.filter((s) => s.id !== id)),
       purchaseOrders,
       addMachine: (input) => {
         const machine: Machine = { ...input, id: `MCH-${2000 + catalogue.length}`, demand: 50 };

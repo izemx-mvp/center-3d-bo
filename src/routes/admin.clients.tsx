@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Building2, Search, Users, Wallet } from "lucide-react";
 import { PageHeader, Panel, KpiCard } from "@/components/ui-kit";
 import { DataTable, type Column } from "@/components/DataTable";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CITIES, clients, formatDate, formatMAD, type Client } from "@/lib/data";
+
 
 export const Route = createFileRoute("/admin/clients")({
   head: () => ({

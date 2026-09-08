@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { GitCompare, Heart, Search } from "lucide-react";
+import { GitCompare, Heart, Search, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader, Panel, StatusPill } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/client/catalogue/")({
 const ALL = "__all__";
 
 function ClientCatalogue() {
-  const { favorites, compare, toggleFavorite, toggleCompare, catalogue } = useApp();
+  const { favorites, compare, toggleFavorite, toggleCompare, catalogue, addToCart } = useApp();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState(ALL);
   const [city, setCity] = useState(ALL);
@@ -152,9 +152,23 @@ function ClientCatalogue() {
                   <h3 className="truncate font-display text-base font-semibold">{m.name}</h3>
                   <p className="text-xs text-muted-foreground">{m.brand} · {m.power} · {m.city}</p>
                   <p className="mt-2 font-display text-lg font-bold text-primary">{formatMAD(m.price)}</p>
-                  <Button className="mt-4 w-full gradient-primary text-primary-foreground" size="sm" asChild>
-                    <Link to="/client/catalogue/$id" params={{ id: m.id }}>Voir la machine</Link>
-                  </Button>
+                  <div className="mt-4 grid grid-cols-[1fr_auto] gap-2">
+                    <Button className="gradient-primary text-primary-foreground" size="sm" asChild>
+                      <Link to="/client/catalogue/$id" params={{ id: m.id }}>Voir la machine</Link>
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      aria-label="Ajouter au panier"
+                      disabled={m.availability === "Indisponible"}
+                      onClick={() => {
+                        addToCart(m.id);
+                        toast.success("Ajouté au panier", { description: m.name });
+                      }}
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </article>
             ))}

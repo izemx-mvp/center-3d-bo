@@ -30,6 +30,7 @@ import { Route as ClientCommandesRouteImport } from './routes/client.commandes'
 import { Route as ClientDemandesRouteImport } from './routes/client.demandes'
 import { Route as ClientDevisRouteImport } from './routes/client.devis'
 import { Route as ClientFacturesRouteImport } from './routes/client.factures'
+import { Route as ClientPanierRouteImport } from './routes/client.panier'
 import { Route as ClientProfilRouteImport } from './routes/client.profil'
 import { Route as LoginAdminRouteImport } from './routes/login/admin'
 import { Route as LoginClientRouteImport } from './routes/login/client'
@@ -147,6 +148,11 @@ const ClientFacturesRoute = ClientFacturesRouteImport.update({
   path: '/factures',
   getParentRoute: () => ClientRoute,
 } as any)
+const ClientPanierRoute = ClientPanierRouteImport.update({
+  id: '/panier',
+  path: '/panier',
+  getParentRoute: () => ClientRoute,
+} as any)
 const ClientProfilRoute = ClientProfilRouteImport.update({
   id: '/profil',
   path: '/profil',
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/client/demandes': typeof ClientDemandesRoute
   '/client/devis': typeof ClientDevisRoute
   '/client/factures': typeof ClientFacturesRoute
+  '/client/panier': typeof ClientPanierRoute
   '/client/profil': typeof ClientProfilRoute
   '/login/admin': typeof LoginAdminRoute
   '/login/client': typeof LoginClientRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByTo {
   '/client/demandes': typeof ClientDemandesRoute
   '/client/devis': typeof ClientDevisRoute
   '/client/factures': typeof ClientFacturesRoute
+  '/client/panier': typeof ClientPanierRoute
   '/client/profil': typeof ClientProfilRoute
   '/login/admin': typeof LoginAdminRoute
   '/login/client': typeof LoginClientRoute
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/client/demandes': typeof ClientDemandesRoute
   '/client/devis': typeof ClientDevisRoute
   '/client/factures': typeof ClientFacturesRoute
+  '/client/panier': typeof ClientPanierRoute
   '/client/profil': typeof ClientProfilRoute
   '/login/admin': typeof LoginAdminRoute
   '/login/client': typeof LoginClientRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/client/demandes'
     | '/client/devis'
     | '/client/factures'
+    | '/client/panier'
     | '/client/profil'
     | '/login/admin'
     | '/login/client'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/client/demandes'
     | '/client/devis'
     | '/client/factures'
+    | '/client/panier'
     | '/client/profil'
     | '/login/admin'
     | '/login/client'
@@ -392,6 +403,7 @@ export interface FileRouteTypes {
     | '/client/demandes'
     | '/client/devis'
     | '/client/factures'
+    | '/client/panier'
     | '/client/profil'
     | '/login/admin'
     | '/login/client'
@@ -564,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientFacturesRouteImport
       parentRoute: typeof ClientRoute
     }
+    '/client/panier': {
+      id: '/client/panier'
+      path: '/panier'
+      fullPath: '/client/panier'
+      preLoaderRoute: typeof ClientPanierRouteImport
+      parentRoute: typeof ClientRoute
+    }
     '/client/profil': {
       id: '/client/profil'
       path: '/profil'
@@ -694,6 +713,7 @@ interface ClientRouteChildren {
   ClientDemandesRoute: typeof ClientDemandesRoute
   ClientDevisRoute: typeof ClientDevisRoute
   ClientFacturesRoute: typeof ClientFacturesRoute
+  ClientPanierRoute: typeof ClientPanierRoute
   ClientProfilRoute: typeof ClientProfilRoute
   ClientIndexRoute: typeof ClientIndexRoute
   ClientCatalogueIdRoute: typeof ClientCatalogueIdRoute
@@ -706,6 +726,7 @@ const ClientRouteChildren: ClientRouteChildren = {
   ClientDemandesRoute: ClientDemandesRoute,
   ClientDevisRoute: ClientDevisRoute,
   ClientFacturesRoute: ClientFacturesRoute,
+  ClientPanierRoute: ClientPanierRoute,
   ClientProfilRoute: ClientProfilRoute,
   ClientIndexRoute: ClientIndexRoute,
   ClientCatalogueIdRoute: ClientCatalogueIdRoute,

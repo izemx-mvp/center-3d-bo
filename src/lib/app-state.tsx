@@ -126,7 +126,22 @@ interface AppContextValue {
   addDocument: (input: Omit<DocumentItem, "id" | "updatedAt">) => DocumentItem;
   updateDocument: (id: string, patch: Partial<DocumentItem>) => void;
   deleteDocument: (id: string) => void;
+  /* Panier client */
+  cart: CartLine[];
+  addToCart: (machineId: string, quantity?: number) => void;
+  setCartQuantity: (machineId: string, quantity: number) => void;
+  removeFromCart: (machineId: string) => void;
+  clearCart: () => void;
+  submitCartDemande: (input: { city: string; message: string }) => DemandeItem[];
+  checkoutCart: (input: { city: string; method: Payment["method"] }) => { orders: Order[]; invoices: Invoice[]; total: number };
 }
+
+export interface CartLine {
+  machineId: string;
+  quantity: number;
+}
+
+const CART_KEY = "agrimach.cart";
 
 const AppContext = createContext<AppContextValue | null>(null);
 
@@ -151,6 +166,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [catalogue, setCatalogue] = useState<Machine[]>(machines);
   const [suppliers, setSuppliers] = useState<Supplier[]>(seedSuppliers);
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
+  const [cart, setCart] = useState<CartLine[]>([]);
 
   useEffect(() => {
     try {
@@ -158,11 +174,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (raw) setUser(JSON.parse(raw) as SessionUser);
       const storedTheme = localStorage.getItem("agrimach.theme");
       if (storedTheme === "dark" || storedTheme === "light") setTheme(storedTheme);
+      const storedCart = localStorage.getItem(CART_KEY);
+      if (storedCart) setCart(JSON.parse(storedCart) as CartLine[]);
     } catch {
       /* ignore */
     }
     setReady(true);
   }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch {
+      /* ignore */
+    }
+  }, [cart, ready]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
@@ -405,8 +432,139 @@ export function AppProvider({ children }: { children: ReactNode }) {
       updateDocument: (id, patch) =>
         setDocuments((d) => d.map((x) => (x.id === id ? { ...x, ...patch, updatedAt: new Date().toISOString() } : x))),
       deleteDocument: (id) => setDocuments((d) => d.filter((x) => x.id !== id)),
+      cart,
+      addToCart: (machineId, quantity = 1) =>
+        setCart((c) =>
+          c.some((l) => l.machineId === machineId)
+            ? c.map((l) => (l.machineId === machineId ? { ...l, quantity: l.quantity + quantity } : l))
+            : [...c, { machineId, quantity }],
+        ),
+      setCartQuantity: (machineId, quantity) =>
+        setCart((c) => c.map((l) => (l.machineId === machineId ? { ...l, quantity: Math.max(1, quantity) } : l))),
+      removeFromCart: (machineId) => setCart((c) => c.filter((l) => l.machineId !== machineId)),
+      clearCart: () => setCart([]),
+      submitCartDemande: ({ city, message }) => {
+        const client = seedClients[0]!;
+        const created: DemandeItem[] = [];
+        cart.forEach((line, i) => {
+          const machine = catalogue.find((m) => m.id === line.machineId);
+          if (!machine) return;
+          created.push({
+            id: `DEM-${4500 + demandes.length + i}`,
+            clientId: client.id,
+            clientName: "Ahmed Benali",
+            company: "Domaine Al Baraka",
+            machineId: machine.id,
+            machineName: machine.name,
+            quantity: line.quantity,
+            city,
+            budget: machine.price * line.quantity,
+            priority: "Haute",
+            rep: client.rep,
+            status: "Nouvelle",
+            createdAt: new Date().toISOString(),
+            message: message || `Demande groupée depuis le panier (${cart.length} références).`,
+          });
+        });
+        setDemandes((d) => [...created, ...d]);
+        setCart([]);
+        return created;
+      },
+      checkoutCart: ({ city, method }) => {
+        const client = seedClients[0]!;
+        const now = new Date().toISOString();
+        const newQuotes: Quote[] = [];
+        const newOrders: Order[] = [];
+        const newPayments: Payment[] = [];
+        const newInvoices: Invoice[] = [];
+        let total = 0;
+        cart.forEach((line, i) => {
+          const machine = catalogue.find((m) => m.id === line.machineId);
+          if (!machine) return;
+          const subtotal = machine.price * line.quantity;
+          const ttc = subtotal * (1 + machine.vat / 100);
+          total += ttc;
+          const quote: Quote = {
+            id: `DEV-${2100 + quotes.length + i}`,
+            clientId: client.id,
+            clientName: "Ahmed Benali",
+            company: "Domaine Al Baraka",
+            machineId: machine.id,
+            machineName: machine.name,
+            quantity: line.quantity,
+            unitPrice: machine.price,
+            discount: 0,
+            vat: machine.vat,
+            delivery: 0,
+            subtotal,
+            total: ttc,
+            status: "Accepté",
+            createdAt: now,
+            validUntil: new Date(Date.now() + 30 * 86400000).toISOString(),
+            rep: client.rep,
+            paymentTerms: "Paiement en ligne — 100 % à la commande",
+          };
+          const order: Order = {
+            id: `CMD-${2100 + orders.length + i}`,
+            quoteId: quote.id,
+            clientId: client.id,
+            clientName: quote.clientName,
+            company: quote.company,
+            machineId: machine.id,
+            machineName: machine.name,
+            quantity: line.quantity,
+            total: ttc,
+            status: "Payée",
+            createdAt: now,
+            deliveryCity: city,
+            rep: client.rep,
+          };
+          const payment: Payment = {
+            id: `PAY-${5500 + payments.length + i}`,
+            orderId: order.id,
+            clientName: order.clientName,
+            company: order.company,
+            amount: ttc,
+            method,
+            status: "Payé",
+            date: now,
+          };
+          const invoice: Invoice = {
+            id: `FAC-${7500 + invoices.length + i}`,
+            orderId: order.id,
+            clientId: client.id,
+            clientName: order.clientName,
+            company: order.company,
+            date: now,
+            dueDate: now,
+            amountHT: subtotal,
+            vat: ttc - subtotal,
+            amountTTC: ttc,
+            status: "Payée",
+          };
+          newQuotes.push(quote);
+          newOrders.push(order);
+          newPayments.push(payment);
+          newInvoices.push(invoice);
+        });
+        setQuotes((q) => [...newQuotes, ...q]);
+        setOrders((o) => [...newOrders, ...o]);
+        setPayments((p) => [...newPayments, ...p]);
+        setInvoices((inv) => [...newInvoices, ...inv]);
+        newOrders.forEach((o) =>
+          setCatalogue((c) =>
+            c.map((m) => {
+              if (m.id !== o.machineId) return m;
+              const stock = Math.max(0, m.stock - o.quantity);
+              return { ...m, stock, availability: stock === 0 ? "Indisponible" : m.availability };
+            }),
+          ),
+        );
+        setCart([]);
+        return { orders: newOrders, invoices: newInvoices, total };
+      },
     }),
-    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare, catalogue, suppliers, purchaseOrders, services, faqs, documents],
+    [user, ready, login, logout, theme, lang, prospects, demandes, quotes, orders, payments, invoices, favorites, compare, catalogue, suppliers, purchaseOrders, services, faqs, documents, cart],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

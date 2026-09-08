@@ -106,6 +106,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [invoices, setInvoices] = useState<Invoice[]>(seedInvoices);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [compare, setCompare] = useState<string[]>([]);
+  const [catalogue, setCatalogue] = useState<Machine[]>(machines);
+  const [suppliers] = useState<Supplier[]>(seedSuppliers);
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
 
   useEffect(() => {
     try {

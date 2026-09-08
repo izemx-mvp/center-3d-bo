@@ -219,7 +219,7 @@ function Client360() {
               return (
                 <div
                   key={n.key}
-                  className="absolute left-1/2 top-1/2 animate-fade-in"
+                  className="absolute left-1/2 top-1/2"
                   style={{
                     transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) translateZ(30px)`,
                     animationDelay: `${i * 70}ms`,

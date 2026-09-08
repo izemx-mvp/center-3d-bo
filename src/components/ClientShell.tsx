@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Bell, Globe, LogOut, Menu, Moon, Sun, User } from "lucide-react";
+import { Bell, Globe, LogOut, Menu, Moon, ShoppingCart, Sun, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/app-state";
 import { BrandLockup, BrandMark } from "@/components/brand";
@@ -22,6 +22,7 @@ import { notifications } from "@/lib/data";
 const NAV = [
   { to: "/client", label: "Accueil" },
   { to: "/client/catalogue", label: "Catalogue" },
+  { to: "/client/panier", label: "Panier" },
   { to: "/client/demandes", label: "Mes demandes" },
   { to: "/client/devis", label: "Mes devis" },
   { to: "/client/commandes", label: "Mes commandes" },
@@ -30,7 +31,8 @@ const NAV = [
 ];
 
 export function ClientShell({ children }: { children: ReactNode }) {
-  const { user, ready, logout, theme, toggleTheme, lang, setLang } = useApp();
+  const { user, ready, logout, theme, toggleTheme, lang, setLang, cart } = useApp();
+  const cartCount = cart.reduce((s, l) => s + l.quantity, 0);
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -106,6 +108,16 @@ export function ClientShell({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="ml-auto flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="relative" aria-label="Mon panier" asChild>
+              <Link to="/client/panier">
+                <ShoppingCart className="h-[18px] w-[18px]" />
+                {cartCount > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full gradient-primary px-1 text-[10px] font-bold text-primary-foreground shadow-glow animate-rise-in">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
             <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Changer de thème">
               {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
             </Button>

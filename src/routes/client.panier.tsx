@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, CreditCard, FileText, Landmark, Lock, Minus, Plus, ShieldCheck, ShoppingCart, Trash2, Truck } from "lucide-react";
+import { ArrowLeft, CreditCard, FileText, Landmark, Lock, Minus, Plus, ShieldCheck, Trash2, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { EmptyState, PageHeader, Panel, StatusPill } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -75,7 +75,8 @@ function ClientPanier() {
         <EmptyState
           title="Votre panier est vide"
           description="Ajoutez des machines depuis le catalogue pour demander un devis groupé ou commander en ligne."
-          action={<Button className="gradient-primary text-primary-foreground" asChild><Link to="/client/catalogue">Parcourir le catalogue</Link></Button>}
+          actionLabel="Parcourir le catalogue"
+          onAction={() => navigate({ to: "/client/catalogue" })}
         />
       </div>
     );
@@ -100,7 +101,8 @@ function ClientPanier() {
       <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
         <div className="space-y-4">
           {lines.map(({ line, machine }, i) => (
-            <Panel key={machine.id} padded={false} className="animate-rise-in" style={{ animationDelay: `${i * 60}ms` }}>
+            <div key={machine.id} className="animate-rise-in" style={{ animationDelay: `${i * 60}ms` }}>
+            <Panel padded={false}>
               <div className="flex flex-wrap items-center gap-4 p-4">
                 <Link to="/client/catalogue/$id" params={{ id: machine.id }} className="shrink-0">
                   <img src={machine.image} alt={machine.name} loading="lazy" width={200} height={150} className="h-24 w-32 rounded-lg object-cover" />
@@ -145,6 +147,7 @@ function ClientPanier() {
                 </p>
               )}
             </Panel>
+            </div>
           ))}
         </div>
 
@@ -298,7 +301,6 @@ function ClientPanier() {
         </DialogContent>
       </Dialog>
 
-      <span className="sr-only"><ShoppingCart /></span>
     </div>
   );
 }

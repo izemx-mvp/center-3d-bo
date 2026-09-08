@@ -27,7 +27,7 @@ export const Route = createFileRoute("/client/catalogue/")({
 const ALL = "__all__";
 
 function ClientCatalogue() {
-  const { favorites, compare, toggleFavorite, toggleCompare } = useApp();
+  const { favorites, compare, toggleFavorite, toggleCompare, catalogue } = useApp();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState(ALL);
   const [city, setCity] = useState(ALL);
@@ -35,7 +35,7 @@ function ClientCatalogue() {
   const [maxPrice, setMaxPrice] = useState(2600000);
 
   const rows = useMemo(() => {
-    const list = machines.filter(
+    const list = catalogue.filter(
       (m) =>
         (!q || `${m.name} ${m.brand} ${m.category}`.toLowerCase().includes(q.toLowerCase())) &&
         (cat === ALL || m.category === cat) &&

@@ -5,6 +5,7 @@ import {
   Bell,
   Boxes,
   CalendarRange,
+  Truck,
   ChevronLeft,
   FileText,
   Gauge,

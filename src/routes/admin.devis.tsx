@@ -20,9 +20,9 @@ import { formatDate, formatMAD, type Quote } from "@/lib/data";
 export const Route = createFileRoute("/admin/devis")({
   head: () => ({
     meta: [
-      { title: "Devis — AGRIMACH" },
+      { title: "Devis — CENTRE 3D" },
       { name: "description", content: "Création, suivi et conversion des devis : remises, TVA, validité et transformation en commande." },
-      { property: "og:title", content: "Devis commerciaux — AGRIMACH" },
+      { property: "og:title", content: "Devis commerciaux — CENTRE 3D" },
       { property: "og:description", content: "Pilotez le cycle de vie complet de vos devis machines agricoles." },
     ],
   }),

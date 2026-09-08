@@ -11,9 +11,9 @@ import { CITIES, clients, formatDate, formatMAD, type Client } from "@/lib/data"
 export const Route = createFileRoute("/admin/clients")({
   head: () => ({
     meta: [
-      { title: "Clients — AGRIMACH" },
+      { title: "Clients — CENTRE 3D" },
       { name: "description", content: "Base clients complète : segments, chiffre d'affaires, commandes et commercial référent." },
-      { property: "og:title", content: "Base clients — AGRIMACH" },
+      { property: "og:title", content: "Base clients — CENTRE 3D" },
       { property: "og:description", content: "42 clients actifs, segmentation et suivi du chiffre d'affaires." },
     ],
   }),

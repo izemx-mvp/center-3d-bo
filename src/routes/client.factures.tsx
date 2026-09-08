@@ -10,9 +10,9 @@ import { formatDate, formatMAD, type Invoice } from "@/lib/data";
 export const Route = createFileRoute("/client/factures")({
   head: () => ({
     meta: [
-      { title: "Mes factures — AGRIMACH" },
+      { title: "Mes factures — CENTRE 3D" },
       { name: "description", content: "Consultez et téléchargez vos factures de machines agricoles, et réglez les montants restant dus en ligne." },
-      { property: "og:title", content: "Mes factures — AGRIMACH" },
+      { property: "og:title", content: "Mes factures — CENTRE 3D" },
       { property: "og:description", content: "Historique de facturation et paiement en ligne." },
     ],
   }),

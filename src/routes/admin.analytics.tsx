@@ -30,9 +30,9 @@ import {
 export const Route = createFileRoute("/admin/analytics")({
   head: () => ({
     meta: [
-      { title: "Analytics commerciales — AGRIMACH" },
+      { title: "Analytics commerciales — CENTRE 3D" },
       { name: "description", content: "Analyse de la performance commerciale : chiffre d'affaires, tunnel de conversion, sources de leads et performance par commercial." },
-      { property: "og:title", content: "Analytics commerciales — AGRIMACH" },
+      { property: "og:title", content: "Analytics commerciales — CENTRE 3D" },
       { property: "og:description", content: "Tableaux de bord analytiques du réseau de distribution de machines agricoles." },
     ],
   }),

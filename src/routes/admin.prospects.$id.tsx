@@ -31,12 +31,12 @@ import { useApp } from "@/lib/app-state";
 export const Route = createFileRoute("/admin/prospects/$id")({
   head: () => ({
     meta: [
-      { title: "Fiche prospect 360° — AGRIMACH" },
+      { title: "Fiche prospect 360° — CENTRE 3D" },
       {
         name: "description",
         content: "Fiche prospect complète : qualification IA, conversations, machines consultées, devis et historique.",
       },
-      { property: "og:title", content: "Fiche prospect 360° — AGRIMACH" },
+      { property: "og:title", content: "Fiche prospect 360° — CENTRE 3D" },
       { property: "og:description", content: "Toute la relation commerciale d'un prospect sur une seule page." },
     ],
   }),

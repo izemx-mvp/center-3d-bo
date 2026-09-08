@@ -40,13 +40,13 @@ import { useApp } from "@/lib/app-state";
 export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
-      { title: "Dashboard commercial — AGRIMACH" },
+      { title: "Dashboard commercial — CENTRE 3D" },
       {
         name: "description",
         content:
-          "Vue d'ensemble de l'activité commerciale AGRIMACH : chiffre d'affaires, prospects, devis, commandes et insights IA.",
+          "Vue d'ensemble de l'activité commerciale CENTRE 3D : chiffre d'affaires, prospects, devis, commandes et insights IA.",
       },
-      { property: "og:title", content: "Dashboard commercial — AGRIMACH" },
+      { property: "og:title", content: "Dashboard commercial — CENTRE 3D" },
       { property: "og:description", content: "Pilotage commercial en temps réel des ventes de machines agricoles." },
     ],
   }),

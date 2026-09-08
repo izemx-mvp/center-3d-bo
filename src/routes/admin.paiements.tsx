@@ -12,9 +12,9 @@ import { formatDate, formatMAD, type Payment } from "@/lib/data";
 export const Route = createFileRoute("/admin/paiements")({
   head: () => ({
     meta: [
-      { title: "Paiements — AGRIMACH" },
+      { title: "Paiements — CENTRE 3D" },
       { name: "description", content: "Encaissements et suivi des paiements : virements, chèques, cartes bancaires et leasing." },
-      { property: "og:title", content: "Paiements — AGRIMACH" },
+      { property: "og:title", content: "Paiements — CENTRE 3D" },
       { property: "og:description", content: "Suivi des encaissements et des méthodes de paiement client." },
     ],
   }),

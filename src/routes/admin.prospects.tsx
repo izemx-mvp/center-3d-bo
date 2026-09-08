@@ -22,12 +22,12 @@ import { useApp } from "@/lib/app-state";
 export const Route = createFileRoute("/admin/prospects")({
   head: () => ({
     meta: [
-      { title: "Prospects & CRM — AGRIMACH" },
+      { title: "Prospects & CRM — CENTRE 3D" },
       {
         name: "description",
         content: "Pipeline commercial complet : scoring IA des prospects, vue tableau, kanban et analytics par source.",
       },
-      { property: "og:title", content: "Prospects & CRM — AGRIMACH" },
+      { property: "og:title", content: "Prospects & CRM — CENTRE 3D" },
       { property: "og:description", content: "Qualification IA et suivi du pipeline de vente de machines agricoles." },
     ],
   }),

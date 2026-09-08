@@ -7,13 +7,13 @@ import { BrandLockup } from "@/components/brand";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AGRIMACH — Choisissez votre espace | Machines agricoles" },
+      { title: "CENTRE 3D — Choisissez votre espace | Machines agricoles" },
       {
         name: "description",
         content:
-          "Accédez à l'espace commercial ou à l'espace client d'AGRIMACH : catalogue de machines agricoles, devis, commandes, paiements et suivi en temps réel.",
+          "Accédez à l'espace commercial ou à l'espace client d'CENTRE 3D : catalogue de machines agricoles, devis, commandes, paiements et suivi en temps réel.",
       },
-      { property: "og:title", content: "AGRIMACH — Plateforme digitale de machines agricoles" },
+      { property: "og:title", content: "CENTRE 3D — Plateforme digitale de machines agricoles" },
       {
         property: "og:description",
         content: "Attirer, qualifier, vendre, encaisser et facturer depuis une seule plateforme.",
@@ -128,7 +128,7 @@ function SpaceSelector() {
               <ShieldCheck className="h-3.5 w-3.5" /> Siège Londres · Réseau Maroc
             </span>
           </div>
-          <span>© 2026 AGRIMACH International Ltd.</span>
+          <span>© 2026 CENTRE 3D International Ltd.</span>
         </footer>
       </div>
     </div>

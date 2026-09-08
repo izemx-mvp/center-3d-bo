@@ -23,9 +23,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/client/catalogue/$id")({
   head: () => ({
     meta: [
-      { title: "Détail machine — Espace client AGRIMACH" },
+      { title: "Détail machine — Espace client CENTRE 3D" },
       { name: "description", content: "Fiche complète de la machine : caractéristiques techniques, disponibilité, prix et demande de devis en ligne." },
-      { property: "og:title", content: "Détail machine agricole — AGRIMACH" },
+      { property: "og:title", content: "Détail machine agricole — CENTRE 3D" },
       { property: "og:description", content: "Consultez les caractéristiques et demandez votre devis personnalisé." },
     ],
   }),

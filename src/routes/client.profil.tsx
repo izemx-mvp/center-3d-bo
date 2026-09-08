@@ -15,9 +15,9 @@ import { Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/client/profil")({
   head: () => ({
     meta: [
-      { title: "Mon profil — AGRIMACH" },
+      { title: "Mon profil — CENTRE 3D" },
       { name: "description", content: "Gérez vos informations d'exploitation, vos coordonnées, vos préférences de notification et vos machines favorites." },
-      { property: "og:title", content: "Mon profil — AGRIMACH" },
+      { property: "og:title", content: "Mon profil — CENTRE 3D" },
       { property: "og:description", content: "Coordonnées, préférences et favoris de votre compte client." },
     ],
   }),

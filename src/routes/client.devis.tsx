@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, Download, MessageSquare, XCircle } from "lucide-react";
+import { CheckCircle2, Eye, MessageSquare, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader, Panel, StatusPill } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { QuoteDownloadButton, QuotePreviewDialog } from "@/components/QuotePreview";
 import { useApp } from "@/lib/app-state";
 import { formatDate, formatMAD, type Quote } from "@/lib/data";
 
@@ -25,6 +26,7 @@ function ClientDevis() {
   const { quotes, updateQuoteStatus, convertQuoteToOrder } = useApp();
   const [negotiate, setNegotiate] = useState<Quote | null>(null);
   const [note, setNote] = useState("");
+  const [preview, setPreview] = useState<Quote | null>(null);
 
   const mine = quotes.slice(0, 10);
 
@@ -56,9 +58,10 @@ function ClientDevis() {
               </dl>
             </div>
             <footer className="flex flex-wrap gap-2 border-t border-border p-4">
-              <Button size="sm" variant="outline" onClick={() => toast.success("Devis téléchargé (PDF)")}>
-                <Download className="mr-2 h-4 w-4" /> Télécharger
+              <Button size="sm" variant="outline" onClick={() => setPreview(q)}>
+                <Eye className="mr-2 h-4 w-4" /> Aperçu
               </Button>
+              <QuoteDownloadButton quote={q} />
               <Button size="sm" variant="outline" onClick={() => setNegotiate(q)}>
                 <MessageSquare className="mr-2 h-4 w-4" /> Négocier
               </Button>
@@ -79,6 +82,8 @@ function ClientDevis() {
           </Panel>
         ))}
       </div>
+
+      <QuotePreviewDialog quote={preview} onOpenChange={(o) => !o && setPreview(null)} />
 
       <Dialog open={!!negotiate} onOpenChange={(o) => !o && setNegotiate(null)}>
         <DialogContent>

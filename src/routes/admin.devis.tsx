@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, FileText, Percent, Search, Send } from "lucide-react";
+import { CheckCircle2, Eye, FileText, Percent, Save, Search, Send } from "lucide-react";
 import { toast } from "sonner";
 import { KpiCard, PageHeader, Panel, StatusPill } from "@/components/ui-kit";
 import { DataTable, type Column } from "@/components/DataTable";
@@ -14,8 +14,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { QuoteDownloadButton, QuotePreviewDialog } from "@/components/QuotePreview";
 import { useApp } from "@/lib/app-state";
 import { formatDate, formatMAD, type Quote } from "@/lib/data";
+import { quoteTotals } from "@/lib/quote-doc";
 
 export const Route = createFileRoute("/admin/devis")({
   head: () => ({
@@ -32,7 +35,9 @@ export const Route = createFileRoute("/admin/devis")({
 const ALL = "__all__";
 
 function DevisPage() {
-  const { quotes, updateQuoteStatus, convertQuoteToOrder } = useApp();
+  const { quotes, updateQuoteStatus, convertQuoteToOrder, updateQuotePricing } = useApp();
+  const [preview, setPreview] = useState<Quote | null>(null);
+  const [draft, setDraft] = useState<{ unitPrice: number; quantity: number; discount: number; delivery: number; vat: number; paymentTerms: string } | null>(null);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState(ALL);
   const [selected, setSelected] = useState<Quote | null>(null);
@@ -90,8 +95,13 @@ function DevisPage() {
             </SelectContent>
           </Select>
         </div>
-        <DataTable rows={rows} columns={columns} pageSize={10} onRowClick={setSelected} />
+        <DataTable rows={rows} columns={columns} pageSize={10} onRowClick={(d) => {
+            setSelected(d);
+            setDraft({ unitPrice: d.unitPrice, quantity: d.quantity, discount: d.discount, delivery: d.delivery, vat: d.vat, paymentTerms: d.paymentTerms });
+          }} />
       </Panel>
+
+      <QuotePreviewDialog quote={preview} onOpenChange={(o) => !o && setPreview(null)} />
 
       <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
@@ -145,7 +155,56 @@ function DevisPage() {
                   </div>
                 </dl>
 
+                {draft && (
+                  <div className="space-y-3 rounded-lg border border-primary/25 bg-primary/5 p-4">
+                    <p className="font-display text-sm font-semibold">Modifier la tarification</p>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {([
+                        ["Prix unitaire HT (MAD)", "unitPrice"],
+                        ["Quantité", "quantity"],
+                        ["Remise (%)", "discount"],
+                        ["Livraison (MAD)", "delivery"],
+                        ["TVA (%)", "vat"],
+                      ] as const).map(([label, key]) => (
+                        <div key={key} className="space-y-1.5">
+                          <Label className="text-xs">{label}</Label>
+                          <Input
+                            type="number"
+                            min={0}
+                            value={draft[key]}
+                            onChange={(e) => setDraft({ ...draft, [key]: Number(e.target.value) || 0 })}
+                          />
+                        </div>
+                      ))}
+                      <div className="space-y-1.5 sm:col-span-2">
+                        <Label className="text-xs">Conditions de paiement</Label>
+                        <Input value={draft.paymentTerms} onChange={(e) => setDraft({ ...draft, paymentTerms: e.target.value })} />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-3 border-t border-primary/20 pt-3 text-sm">
+                      <span className="text-muted-foreground">Nouveau total TTC</span>
+                      <span className="font-display text-base font-bold text-primary">{formatMAD(quoteTotals(draft).total)}</span>
+                    </div>
+                    <Button
+                      size="sm"
+                      className="gradient-primary text-primary-foreground"
+                      onClick={() => {
+                        updateQuotePricing(selected.id, draft);
+                        const { subtotal, total } = quoteTotals(draft);
+                        setSelected({ ...selected, ...draft, subtotal, total });
+                        toast.success("Tarification mise à jour", { description: `Nouveau total : ${formatMAD(total)}` });
+                      }}
+                    >
+                      <Save className="mr-2 h-4 w-4" /> Enregistrer les prix
+                    </Button>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" onClick={() => setPreview(selected)}>
+                    <Eye className="mr-2 h-4 w-4" /> Aperçu du devis
+                  </Button>
+                  <QuoteDownloadButton quote={selected} size="default" />
                   <Button variant="outline" onClick={() => toast.success("Devis envoyé au client")}>
                     <Send className="mr-2 h-4 w-4" /> Envoyer
                   </Button>

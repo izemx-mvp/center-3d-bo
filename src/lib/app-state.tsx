@@ -1,3 +1,4 @@
+import { quoteTotals } from "./quote-doc";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   clients as seedClients,
@@ -89,6 +90,10 @@ interface AppContextValue {
   createDemande: (input: { machineId: string; quantity: number; city: string; message: string; budget: number }) => DemandeItem;
   createQuote: (input: Omit<Quote, "id" | "createdAt" | "validUntil" | "subtotal" | "total">) => Quote;
   updateQuoteStatus: (id: string, status: Quote["status"]) => void;
+  updateQuotePricing: (
+    id: string,
+    patch: Partial<Pick<Quote, "unitPrice" | "quantity" | "discount" | "delivery" | "vat" | "paymentTerms" | "validUntil">>,
+  ) => void;
   convertQuoteToOrder: (quoteId: string) => Order | undefined;
   updateOrderStatus: (id: string, status: Order["status"]) => void;
   registerPayment: (orderId: string, amount: number) => Payment | undefined;
@@ -249,6 +254,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       },
       updateQuoteStatus: (id, status) =>
         setQuotes((qs) => qs.map((q) => (q.id === id ? { ...q, status } : q))),
+      updateQuotePricing: (id, patch) =>
+        setQuotes((qs) =>
+          qs.map((q) => {
+            if (q.id !== id) return q;
+            const next = { ...q, ...patch };
+            const { subtotal, total } = quoteTotals(next);
+            return { ...next, subtotal, total };
+          }),
+        ),
       convertQuoteToOrder: (quoteId) => {
         const q = quotes.find((x) => x.id === quoteId);
         if (!q) return undefined;

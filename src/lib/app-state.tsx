@@ -8,12 +8,16 @@ import {
   prospects as seedProspects,
   quotes as seedQuotes,
   machines,
+  suppliers as seedSuppliers,
   type DemandeItem,
   type Invoice,
+  type Machine,
   type Order,
   type Payment,
   type Prospect,
+  type PurchaseOrder,
   type Quote,
+  type Supplier,
 } from "./data";
 
 /* ---------------- Auth ---------------- */

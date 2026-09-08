@@ -24,9 +24,11 @@ export const Route = createFileRoute("/admin/clients")({
 const ALL = "__all__";
 
 function ClientsPage() {
+  const navigate = useNavigate();
   const [q, setQ] = useState("");
   const [segment, setSegment] = useState(ALL);
   const [city, setCity] = useState(ALL);
+
 
   const rows = useMemo(
     () =>
@@ -105,7 +107,13 @@ function ClientsPage() {
             </SelectContent>
           </Select>
         </div>
-        <DataTable rows={rows} columns={columns} pageSize={10} />
+        <DataTable
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          onRowClick={(c) => navigate({ to: "/admin/clients/$id", params: { id: c.id } })}
+        />
+
       </Panel>
     </div>
   );

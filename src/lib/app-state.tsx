@@ -88,6 +88,18 @@ interface AppContextValue {
   registerPayment: (orderId: string, amount: number) => Payment | undefined;
   generateInvoice: (orderId: string) => Invoice | undefined;
   updateProspectStatus: (id: string, status: Prospect["status"]) => void;
+  catalogue: Machine[];
+  suppliers: Supplier[];
+  purchaseOrders: PurchaseOrder[];
+  addMachine: (input: Omit<Machine, "id" | "demand">) => Machine;
+  updateMachine: (id: string, patch: Partial<Machine>) => void;
+  deleteMachine: (id: string) => void;
+  adjustStock: (id: string, delta: number) => void;
+  createPurchaseOrder: (
+    input: Omit<PurchaseOrder, "id" | "createdAt" | "totalHT" | "vat" | "totalTTC" | "status"> & {
+      status?: PurchaseOrder["status"];
+    },
+  ) => PurchaseOrder;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);

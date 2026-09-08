@@ -20,8 +20,8 @@ import { Route as AdminCommunicationRouteImport } from './routes/admin.communica
 import { Route as AdminConversationsRouteImport } from './routes/admin.conversations'
 import { Route as AdminDemandesRouteImport } from './routes/admin.demandes'
 import { Route as AdminDevisRouteImport } from './routes/admin.devis'
-import { Route as AdminDisponibiliteRouteImport } from './routes/admin.disponibilite'
 import { Route as AdminFacturesRouteImport } from './routes/admin.factures'
+import { Route as AdminFournisseursRouteImport } from './routes/admin.fournisseurs'
 import { Route as AdminPaiementsRouteImport } from './routes/admin.paiements'
 import { Route as ClientIndexRouteImport } from './routes/client.index'
 import { Route as ClientAssistantRouteImport } from './routes/client.assistant'
@@ -96,14 +96,14 @@ const AdminDevisRoute = AdminDevisRouteImport.update({
   path: '/devis',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminDisponibiliteRoute = AdminDisponibiliteRouteImport.update({
-  id: '/disponibilite',
-  path: '/disponibilite',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminFacturesRoute = AdminFacturesRouteImport.update({
   id: '/factures',
   path: '/factures',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFournisseursRoute = AdminFournisseursRouteImport.update({
+  id: '/fournisseurs',
+  path: '/fournisseurs',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminPaiementsRoute = AdminPaiementsRouteImport.update({
@@ -208,8 +208,8 @@ export interface FileRoutesByFullPath {
   '/admin/conversations': typeof AdminConversationsRoute
   '/admin/demandes': typeof AdminDemandesRoute
   '/admin/devis': typeof AdminDevisRoute
-  '/admin/disponibilite': typeof AdminDisponibiliteRoute
   '/admin/factures': typeof AdminFacturesRoute
+  '/admin/fournisseurs': typeof AdminFournisseursRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/client/assistant': typeof ClientAssistantRoute
   '/client/commandes': typeof ClientCommandesRoute
@@ -239,8 +239,8 @@ export interface FileRoutesByTo {
   '/admin/conversations': typeof AdminConversationsRoute
   '/admin/demandes': typeof AdminDemandesRoute
   '/admin/devis': typeof AdminDevisRoute
-  '/admin/disponibilite': typeof AdminDisponibiliteRoute
   '/admin/factures': typeof AdminFacturesRoute
+  '/admin/fournisseurs': typeof AdminFournisseursRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/client/assistant': typeof ClientAssistantRoute
   '/client/commandes': typeof ClientCommandesRoute
@@ -273,8 +273,8 @@ export interface FileRoutesById {
   '/admin/conversations': typeof AdminConversationsRoute
   '/admin/demandes': typeof AdminDemandesRoute
   '/admin/devis': typeof AdminDevisRoute
-  '/admin/disponibilite': typeof AdminDisponibiliteRoute
   '/admin/factures': typeof AdminFacturesRoute
+  '/admin/fournisseurs': typeof AdminFournisseursRoute
   '/admin/paiements': typeof AdminPaiementsRoute
   '/client/assistant': typeof ClientAssistantRoute
   '/client/commandes': typeof ClientCommandesRoute
@@ -308,8 +308,8 @@ export interface FileRouteTypes {
     | '/admin/conversations'
     | '/admin/demandes'
     | '/admin/devis'
-    | '/admin/disponibilite'
     | '/admin/factures'
+    | '/admin/fournisseurs'
     | '/admin/paiements'
     | '/client/assistant'
     | '/client/commandes'
@@ -339,8 +339,8 @@ export interface FileRouteTypes {
     | '/admin/conversations'
     | '/admin/demandes'
     | '/admin/devis'
-    | '/admin/disponibilite'
     | '/admin/factures'
+    | '/admin/fournisseurs'
     | '/admin/paiements'
     | '/client/assistant'
     | '/client/commandes'
@@ -372,8 +372,8 @@ export interface FileRouteTypes {
     | '/admin/conversations'
     | '/admin/demandes'
     | '/admin/devis'
-    | '/admin/disponibilite'
     | '/admin/factures'
+    | '/admin/fournisseurs'
     | '/admin/paiements'
     | '/client/assistant'
     | '/client/commandes'
@@ -482,18 +482,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDevisRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/disponibilite': {
-      id: '/admin/disponibilite'
-      path: '/disponibilite'
-      fullPath: '/admin/disponibilite'
-      preLoaderRoute: typeof AdminDisponibiliteRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/factures': {
       id: '/admin/factures'
       path: '/factures'
       fullPath: '/admin/factures'
       preLoaderRoute: typeof AdminFacturesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/fournisseurs': {
+      id: '/admin/fournisseurs'
+      path: '/fournisseurs'
+      fullPath: '/admin/fournisseurs'
+      preLoaderRoute: typeof AdminFournisseursRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/paiements': {
@@ -633,8 +633,8 @@ interface AdminRouteChildren {
   AdminConversationsRoute: typeof AdminConversationsRoute
   AdminDemandesRoute: typeof AdminDemandesRoute
   AdminDevisRoute: typeof AdminDevisRoute
-  AdminDisponibiliteRoute: typeof AdminDisponibiliteRoute
   AdminFacturesRoute: typeof AdminFacturesRoute
+  AdminFournisseursRoute: typeof AdminFournisseursRoute
   AdminPaiementsRoute: typeof AdminPaiementsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminCatalogueIdRoute: typeof AdminCatalogueIdRoute
@@ -653,8 +653,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminConversationsRoute: AdminConversationsRoute,
   AdminDemandesRoute: AdminDemandesRoute,
   AdminDevisRoute: AdminDevisRoute,
-  AdminDisponibiliteRoute: AdminDisponibiliteRoute,
   AdminFacturesRoute: AdminFacturesRoute,
+  AdminFournisseursRoute: AdminFournisseursRoute,
   AdminPaiementsRoute: AdminPaiementsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminCatalogueIdRoute: AdminCatalogueIdRoute,

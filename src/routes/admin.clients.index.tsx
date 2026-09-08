@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CITIES, clients, formatDate, formatMAD, type Client } from "@/lib/data";
 
 
-export const Route = createFileRoute("/admin/clients")({
+export const Route = createFileRoute("/admin/clients/")({
   head: () => ({
     meta: [
       { title: "Clients — CENTRE 3D" },

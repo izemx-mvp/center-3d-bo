@@ -19,7 +19,7 @@ import {
 import { CITIES, CHANNELS, LEAD_STATUSES, SALES_REPS, formatDate, sourceSeries, type Prospect } from "@/lib/data";
 import { useApp } from "@/lib/app-state";
 
-export const Route = createFileRoute("/admin/prospects")({
+export const Route = createFileRoute("/admin/prospects/")({
   head: () => ({
     meta: [
       { title: "Prospects & CRM — CENTRE 3D" },

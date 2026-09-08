@@ -20,7 +20,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CATEGORIES, CITIES, formatMAD, machines } from "@/lib/data";
 
-export const Route = createFileRoute("/admin/catalogue")({
+export const Route = createFileRoute("/admin/catalogue/")({
   head: () => ({
     meta: [
       { title: "Catalogue machines — CENTRE 3D" },

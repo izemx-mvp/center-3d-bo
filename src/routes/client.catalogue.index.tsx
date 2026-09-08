@@ -12,7 +12,7 @@ import { useApp } from "@/lib/app-state";
 import { CATEGORIES, CITIES, formatMAD, machineById, machines } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/client/catalogue")({
+export const Route = createFileRoute("/client/catalogue/")({
   head: () => ({
     meta: [
       { title: "Catalogue machines agricoles — Espace client CENTRE 3D" },

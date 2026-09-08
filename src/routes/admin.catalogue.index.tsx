@@ -115,10 +115,10 @@ function CatalogueManagementPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Fiches produits" value={catalogue.length} index={0} />
-        <KpiCard label="Catégories" value={CATEGORIES.length} index={1} />
-        <KpiCard label="Prix moyen" value={formatMAD(avgPrice)} index={2} />
-        <KpiCard label="Descriptions à compléter" value={missingDesc} hint="Moins de 40 caractères" index={3} />
+        <KpiCard label="Fiches produits" value={catalogue.length} icon={<LayoutGrid className="h-4 w-4" />} index={0} />
+        <KpiCard label="Catégories" value={CATEGORIES.length} icon={<Tags className="h-4 w-4" />} index={1} />
+        <KpiCard label="Prix moyen" value={avgPrice} format={formatMAD} icon={<Coins className="h-4 w-4" />} index={2} />
+        <KpiCard label="Descriptions à compléter" value={missingDesc} icon={<FileWarning className="h-4 w-4" />} hint="Moins de 40 caractères" index={3} />
       </div>
 
       <Panel>

@@ -37,6 +37,7 @@ import { Route as ClientProfilRouteImport } from './routes/client.profil'
 import { Route as LoginAdminRouteImport } from './routes/login/admin'
 import { Route as LoginClientRouteImport } from './routes/login/client'
 import { Route as AdminCatalogueIdRouteImport } from './routes/admin.catalogue.$id'
+import { Route as AdminClientsIdRouteImport } from './routes/admin.clients.$id'
 import { Route as AdminProspectsIdRouteImport } from './routes/admin.prospects.$id'
 import { Route as ClientCatalogueIdRouteImport } from './routes/client.catalogue.$id'
 
@@ -180,6 +181,11 @@ const AdminCatalogueIdRoute = AdminCatalogueIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminCatalogueRoute,
 } as any)
+const AdminClientsIdRoute = AdminClientsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminClientsRoute,
+} as any)
 const AdminProspectsIdRoute = AdminProspectsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -198,7 +204,7 @@ export interface FileRoutesByFullPath {
   '/admin/administration': typeof AdminAdministrationRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/catalogue': typeof AdminCatalogueRouteWithChildren
-  '/admin/clients': typeof AdminClientsRoute
+  '/admin/clients': typeof AdminClientsRouteWithChildren
   '/admin/commandes': typeof AdminCommandesRoute
   '/admin/communication': typeof AdminCommunicationRoute
   '/admin/conversations': typeof AdminConversationsRoute
@@ -220,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/client/': typeof ClientIndexRoute
   '/admin/catalogue/$id': typeof AdminCatalogueIdRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/prospects/$id': typeof AdminProspectsIdRoute
   '/client/catalogue/$id': typeof ClientCatalogueIdRoute
 }
@@ -228,7 +235,7 @@ export interface FileRoutesByTo {
   '/admin/administration': typeof AdminAdministrationRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/catalogue': typeof AdminCatalogueRouteWithChildren
-  '/admin/clients': typeof AdminClientsRoute
+  '/admin/clients': typeof AdminClientsRouteWithChildren
   '/admin/commandes': typeof AdminCommandesRoute
   '/admin/communication': typeof AdminCommunicationRoute
   '/admin/conversations': typeof AdminConversationsRoute
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/client': typeof ClientIndexRoute
   '/admin/catalogue/$id': typeof AdminCatalogueIdRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/prospects/$id': typeof AdminProspectsIdRoute
   '/client/catalogue/$id': typeof ClientCatalogueIdRoute
 }
@@ -261,7 +269,7 @@ export interface FileRoutesById {
   '/admin/administration': typeof AdminAdministrationRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/catalogue': typeof AdminCatalogueRouteWithChildren
-  '/admin/clients': typeof AdminClientsRoute
+  '/admin/clients': typeof AdminClientsRouteWithChildren
   '/admin/commandes': typeof AdminCommandesRoute
   '/admin/communication': typeof AdminCommunicationRoute
   '/admin/conversations': typeof AdminConversationsRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/client/': typeof ClientIndexRoute
   '/admin/catalogue/$id': typeof AdminCatalogueIdRoute
+  '/admin/clients/$id': typeof AdminClientsIdRoute
   '/admin/prospects/$id': typeof AdminProspectsIdRoute
   '/client/catalogue/$id': typeof ClientCatalogueIdRoute
 }
@@ -317,6 +326,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/client/'
     | '/admin/catalogue/$id'
+    | '/admin/clients/$id'
     | '/admin/prospects/$id'
     | '/client/catalogue/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -347,6 +357,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/client'
     | '/admin/catalogue/$id'
+    | '/admin/clients/$id'
     | '/admin/prospects/$id'
     | '/client/catalogue/$id'
   id:
@@ -379,6 +390,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/client/'
     | '/admin/catalogue/$id'
+    | '/admin/clients/$id'
     | '/admin/prospects/$id'
     | '/client/catalogue/$id'
   fileRoutesById: FileRoutesById
@@ -589,6 +601,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCatalogueIdRouteImport
       parentRoute: typeof AdminCatalogueRoute
     }
+    '/admin/clients/$id': {
+      id: '/admin/clients/$id'
+      path: '/$id'
+      fullPath: '/admin/clients/$id'
+      preLoaderRoute: typeof AdminClientsIdRouteImport
+      parentRoute: typeof AdminClientsRoute
+    }
     '/admin/prospects/$id': {
       id: '/admin/prospects/$id'
       path: '/$id'
@@ -618,6 +637,18 @@ const AdminCatalogueRouteWithChildren = AdminCatalogueRoute._addFileChildren(
   AdminCatalogueRouteChildren,
 )
 
+interface AdminClientsRouteChildren {
+  AdminClientsIdRoute: typeof AdminClientsIdRoute
+}
+
+const AdminClientsRouteChildren: AdminClientsRouteChildren = {
+  AdminClientsIdRoute: AdminClientsIdRoute,
+}
+
+const AdminClientsRouteWithChildren = AdminClientsRoute._addFileChildren(
+  AdminClientsRouteChildren,
+)
+
 interface AdminProspectsRouteChildren {
   AdminProspectsIdRoute: typeof AdminProspectsIdRoute
 }
@@ -634,7 +665,7 @@ interface AdminRouteChildren {
   AdminAdministrationRoute: typeof AdminAdministrationRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminCatalogueRoute: typeof AdminCatalogueRouteWithChildren
-  AdminClientsRoute: typeof AdminClientsRoute
+  AdminClientsRoute: typeof AdminClientsRouteWithChildren
   AdminCommandesRoute: typeof AdminCommandesRoute
   AdminCommunicationRoute: typeof AdminCommunicationRoute
   AdminConversationsRoute: typeof AdminConversationsRoute
@@ -651,7 +682,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdministrationRoute: AdminAdministrationRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminCatalogueRoute: AdminCatalogueRouteWithChildren,
-  AdminClientsRoute: AdminClientsRoute,
+  AdminClientsRoute: AdminClientsRouteWithChildren,
   AdminCommandesRoute: AdminCommandesRoute,
   AdminCommunicationRoute: AdminCommunicationRoute,
   AdminConversationsRoute: AdminConversationsRoute,

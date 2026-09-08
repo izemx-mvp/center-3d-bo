@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { AlertTriangle, Boxes, Mail, Minus, PackageCheck, Plus, Send, Truck } from "lucide-react";
+import { AlertTriangle, Boxes, Mail, Minus, PackageCheck, Pencil, Plus, Send, Trash2, Truck, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { KpiCard, PageHeader, Panel, StatusPill } from "@/components/ui-kit";
 import { DataTable, type Column } from "@/components/DataTable";
@@ -17,6 +17,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useApp } from "@/lib/app-state";
 import { CITIES, formatDate, formatMAD, type Machine, type PurchaseLine, type Supplier } from "@/lib/data";
@@ -41,7 +51,10 @@ export const Route = createFileRoute("/admin/fournisseurs")({
 const ALL = "__all__";
 
 function SuppliersStockPage() {
-  const { catalogue, suppliers, purchaseOrders, adjustStock } = useApp();
+  const { catalogue, suppliers, purchaseOrders, adjustStock, addSupplier, updateSupplier, deleteSupplier } = useApp();
+  const [editSupplier, setEditSupplier] = useState<Supplier | null>(null);
+  const [creatingSupplier, setCreatingSupplier] = useState(false);
+  const [supplierToDelete, setSupplierToDelete] = useState<Supplier | null>(null);
   const [city, setCity] = useState(ALL);
   const [poSupplier, setPoSupplier] = useState<Supplier | null>(null);
   const [prefill, setPrefill] = useState<Machine | null>(null);
@@ -61,7 +74,9 @@ function SuppliersStockPage() {
   };
 
   const supplierFor = (m: Machine) =>
-    suppliers.find((s) => s.brands.some((b) => b.toLowerCase() === m.brand.toLowerCase())) ?? suppliers[0]!;
+    suppliers.find((s) => s.id === m.supplierId) ??
+    suppliers.find((s) => s.brands.some((b) => b.toLowerCase() === m.brand.toLowerCase())) ??
+    suppliers[0]!;
 
   const stockColumns: Column<Machine>[] = [
     {
@@ -79,6 +94,17 @@ function SuppliersStockPage() {
       ),
     },
     { key: "city", header: "Dépôt", sortValue: (m) => m.city, render: (m) => `${m.city}, ${m.country}` },
+    {
+      key: "supplier",
+      header: "Fournisseur",
+      sortValue: (m) => supplierFor(m)?.name ?? "",
+      render: (m) => (
+        <span className="min-w-0">
+          <span className="block truncate">{supplierFor(m)?.name ?? "Non attribué"}</span>
+          <span className="block text-xs text-muted-foreground">{supplierFor(m)?.city}</span>
+        </span>
+      ),
+    },
     {
       key: "stock",
       header: "Stock",
@@ -126,12 +152,26 @@ function SuppliersStockPage() {
     { key: "inco", header: "Incoterm", render: (s) => s.incoterm },
     { key: "rating", header: "Note", sortValue: (s) => s.rating, render: (s) => `${s.rating.toFixed(1)} / 5` },
     {
+      key: "refs",
+      header: "Références",
+      sortValue: (s) => catalogue.filter((m) => m.supplierId === s.id).length,
+      render: (s) => `${catalogue.filter((m) => m.supplierId === s.id).length} machine(s)`,
+    },
+    {
       key: "act",
       header: "",
       render: (s) => (
-        <Button size="sm" variant="outline" onClick={() => openPo(s)}>
-          <Mail className="mr-1.5 h-3.5 w-3.5" /> Commander
-        </Button>
+        <span className="flex items-center justify-end gap-1.5">
+          <Button size="sm" variant="outline" onClick={() => openPo(s)}>
+            <Mail className="mr-1.5 h-3.5 w-3.5" /> Commander
+          </Button>
+          <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Modifier le fournisseur" onClick={() => setEditSupplier(s)}>
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+          <Button size="icon" variant="ghost" className="h-8 w-8" aria-label="Supprimer le fournisseur" onClick={() => setSupplierToDelete(s)}>
+            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+          </Button>
+        </span>
       ),
     },
   ];
@@ -149,9 +189,14 @@ function SuppliersStockPage() {
         title="Fournisseurs & stock"
         subtitle="Partenaires d'approvisionnement, niveaux de stock par dépôt et bons de commande"
         actions={
-          <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow" onClick={() => openPo(suppliers[0]!)}>
-            <Send className="mr-2 h-4 w-4" /> Nouveau bon de commande
-          </Button>
+          <>
+            <Button size="sm" variant="outline" onClick={() => setCreatingSupplier(true)}>
+              <UserPlus className="mr-2 h-4 w-4" /> Nouveau fournisseur
+            </Button>
+            <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow" onClick={() => openPo(suppliers[0]!)} disabled={suppliers.length === 0}>
+              <Send className="mr-2 h-4 w-4" /> Nouveau bon de commande
+            </Button>
+          </>
         }
       />
 
@@ -238,6 +283,54 @@ function SuppliersStockPage() {
           </Panel>
         </div>
       </div>
+
+      <SupplierFormDialog
+        open={creatingSupplier}
+        onOpenChange={setCreatingSupplier}
+        title="Nouveau fournisseur"
+        initial={emptySupplier()}
+        onSubmit={(draft) => {
+          addSupplier(draft);
+          toast.success("Fournisseur ajouté", { description: `${draft.name} rejoint votre panel d'approvisionnement.` });
+        }}
+      />
+
+      <SupplierFormDialog
+        open={editSupplier !== null}
+        onOpenChange={(o) => !o && setEditSupplier(null)}
+        title={`Modifier — ${editSupplier?.name ?? ""}`}
+        initial={editSupplier ?? emptySupplier()}
+        onSubmit={(draft) => {
+          if (editSupplier) updateSupplier(editSupplier.id, draft);
+          toast.success("Fournisseur mis à jour");
+          setEditSupplier(null);
+        }}
+      />
+
+      <AlertDialog open={supplierToDelete !== null} onOpenChange={(o) => !o && setSupplierToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer ce fournisseur ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {supplierToDelete?.name} sera retiré du panel. Les machines qui lui sont rattachées devront être réaffectées.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (supplierToDelete) {
+                  deleteSupplier(supplierToDelete.id);
+                  toast.success("Fournisseur supprimé");
+                }
+                setSupplierToDelete(null);
+              }}
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {poSupplier && (
         <PurchaseOrderDialog
@@ -523,6 +616,95 @@ function PurchaseOrderDialog({
             <Send className="mr-2 h-4 w-4" /> Envoyer l'e-mail
           </Button>
         </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+type SupplierDraft = Omit<Supplier, "id">;
+
+const emptySupplier = (): SupplierDraft => ({
+  name: "",
+  brands: [],
+  contactName: "",
+  email: "",
+  phone: "",
+  city: "Casablanca",
+  country: "Maroc",
+  incoterm: "Franco dépôt",
+  leadTimeDays: 30,
+  paymentTerms: "Virement à 45 jours",
+  rating: 4.5,
+  since: String(new Date().getFullYear()),
+});
+
+function SupplierFormDialog({
+  open,
+  onOpenChange,
+  title,
+  initial,
+  onSubmit,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  title: string;
+  initial: SupplierDraft;
+  onSubmit: (draft: SupplierDraft) => void;
+}) {
+  const [draft, setDraft] = useState<SupplierDraft>(initial);
+  const [key, setKey] = useState("");
+
+  const signature = `${open}-${initial.name}-${initial.email}`;
+  if (signature !== key) {
+    setKey(signature);
+    setDraft(initial);
+  }
+
+  const set = <K extends keyof SupplierDraft>(k: K, v: SupplierDraft[K]) => setDraft((d) => ({ ...d, [k]: v }));
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[88vh] max-w-2xl overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>Coordonnées, marques distribuées, délais et conditions commerciales du fournisseur.</DialogDescription>
+        </DialogHeader>
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit(draft);
+            onOpenChange(false);
+          }}
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2"><Label htmlFor="sn">Raison sociale *</Label><Input id="sn" required value={draft.name} onChange={(e) => set("name", e.target.value)} placeholder="AgriMech Europe SA" /></div>
+            <div className="space-y-2"><Label htmlFor="sc">Contact *</Label><Input id="sc" required value={draft.contactName} onChange={(e) => set("contactName", e.target.value)} /></div>
+            <div className="space-y-2"><Label htmlFor="se">E-mail *</Label><Input id="se" required type="email" value={draft.email} onChange={(e) => set("email", e.target.value)} /></div>
+            <div className="space-y-2"><Label htmlFor="sp">Téléphone</Label><Input id="sp" value={draft.phone} onChange={(e) => set("phone", e.target.value)} /></div>
+            <div className="space-y-2">
+              <Label>Ville</Label>
+              <Input value={draft.city} onChange={(e) => set("city", e.target.value)} />
+            </div>
+            <div className="space-y-2"><Label htmlFor="sco">Pays</Label><Input id="sco" value={draft.country} onChange={(e) => set("country", e.target.value)} /></div>
+            <div className="space-y-2"><Label htmlFor="si">Incoterm</Label><Input id="si" value={draft.incoterm} onChange={(e) => set("incoterm", e.target.value)} /></div>
+            <div className="space-y-2"><Label htmlFor="sl">Délai (jours)</Label><Input id="sl" type="number" min={0} value={draft.leadTimeDays} onChange={(e) => set("leadTimeDays", Number(e.target.value) || 0)} /></div>
+            <div className="space-y-2"><Label htmlFor="sr">Note (/5)</Label><Input id="sr" type="number" step="0.1" min={0} max={5} value={draft.rating} onChange={(e) => set("rating", Number(e.target.value) || 0)} /></div>
+            <div className="space-y-2"><Label htmlFor="ss">Partenaire depuis</Label><Input id="ss" value={draft.since} onChange={(e) => set("since", e.target.value)} /></div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="sb">Marques distribuées</Label>
+            <Input id="sb" value={draft.brands.join(", ")} onChange={(e) => set("brands", e.target.value.split(",").map((b) => b.trim()).filter(Boolean))} placeholder="AgriMech, TerraPro" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="spt">Conditions de paiement</Label>
+            <Textarea id="spt" rows={2} value={draft.paymentTerms} onChange={(e) => set("paymentTerms", e.target.value)} />
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Annuler</Button>
+            <Button type="submit" className="gradient-primary text-primary-foreground">Enregistrer le fournisseur</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -140,6 +140,7 @@ export interface Machine {
   country: string;
   availability: Availability;
   stock: number;
+  supplierId: string;
   image: string;
   demand: number;
   description: string;
@@ -175,6 +176,9 @@ const PRICE_BASE: Record<Category, [number, number]> = {
   "Presses à balles": [240000, 610000],
   Irrigation: [150000, 470000],
 };
+
+/** Identifiants des fournisseurs (déclarés plus bas) utilisés par les fiches machines. */
+const SUPPLIER_IDS = ["FRN-100", "FRN-101", "FRN-102", "FRN-103", "FRN-104"] as const;
 
 export const machines: Machine[] = Array.from({ length: 34 }, (_, i) => {
   const category = at(CATEGORIES, i % CATEGORIES.length);
@@ -215,6 +219,7 @@ export const machines: Machine[] = Array.from({ length: 34 }, (_, i) => {
     country: rng() > 0.82 ? pick(COUNTRIES.slice(1)) : "Maroc",
     availability,
     stock: availability === "Disponible" ? between(1, 9) : availability === "Réservée" ? 1 : 0,
+    supplierId: at(SUPPLIER_IDS, i % SUPPLIER_IDS.length),
     image: CATEGORY_IMAGE[category],
     demand: between(24, 98),
     description: `${brand} ${model} — équipement ${category.toLowerCase().replace(/s$/, "")} de nouvelle génération, importé et préparé par nos ateliers. Motorisation conforme aux normes d'émission, cabine climatisée, télémétrie embarquée et suivi de maintenance connecté.`,
@@ -827,6 +832,8 @@ export const suppliers: Supplier[] = [
     since: "2021",
   },
 ];
+
+export const supplierById = (id: string) => suppliers.find((s) => s.id === id);
 
 export interface PurchaseLine {
   machineId: string;

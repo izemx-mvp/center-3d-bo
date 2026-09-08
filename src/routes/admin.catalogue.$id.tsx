@@ -1,12 +1,24 @@
 import { useState } from "react";
-import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { ArrowLeft, CalendarCheck, MapPin, Send, ShoppingCart, Sparkles } from "lucide-react";
+import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
+import { ArrowLeft, MapPin, Pencil, Send, Sparkles, Trash2, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader, Panel, StatusPill } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { formatMAD, machineById, machines } from "@/lib/data";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { MachineFormDialog } from "@/components/MachineFormDialog";
+import { useApp } from "@/lib/app-state";
+import { formatMAD } from "@/lib/data";
 
 export const Route = createFileRoute("/admin/catalogue/$id")({
   head: () => ({
@@ -25,7 +37,11 @@ export const Route = createFileRoute("/admin/catalogue/$id")({
 
 function MachineDetail() {
   const { id } = useParams({ from: "/admin/catalogue/$id" });
-  const machine = machineById(id);
+  const navigate = useNavigate();
+  const { catalogue, suppliers, updateMachine, deleteMachine } = useApp();
+  const machine = catalogue.find((m) => m.id === id);
+  const [editing, setEditing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [active, setActive] = useState(0);
   const [question, setQuestion] = useState("");
   const [answers, setAnswers] = useState<{ q: string; a: string }[]>([]);
@@ -41,8 +57,9 @@ function MachineDetail() {
     );
   }
 
-  const gallery = [machine.image, ...machines.filter((m) => m.category === machine.category && m.id !== machine.id).slice(0, 3).map((m) => m.image)];
-  const similar = machines.filter((m) => m.category === machine.category && m.id !== machine.id).slice(0, 3);
+  const supplier = suppliers.find((s) => s.id === machine.supplierId);
+  const gallery = [machine.image, ...catalogue.filter((m) => m.category === machine.category && m.id !== machine.id).slice(0, 3).map((m) => m.image)];
+  const similar = catalogue.filter((m) => m.category === machine.category && m.id !== machine.id).slice(0, 3);
 
   return (
     <div className="space-y-6">
@@ -55,11 +72,11 @@ function MachineDetail() {
         subtitle={`${machine.category} · ${machine.brand} ${machine.model} · ${machine.year}`}
         actions={
           <>
-            <Button variant="outline" size="sm" onClick={() => toast.success("Machine réservée", { description: `${machine.name} réservée pour 7 jours.` })}>
-              <CalendarCheck className="mr-2 h-4 w-4" /> Réserver
+            <Button variant="outline" size="sm" className="text-destructive" onClick={() => setConfirmDelete(true)}>
+              <Trash2 className="mr-2 h-4 w-4" /> Supprimer
             </Button>
-            <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow" onClick={() => toast.success("Devis créé", { description: "Le devis a été initialisé avec cette machine." })}>
-              <ShoppingCart className="mr-2 h-4 w-4" /> Créer un devis
+            <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow" onClick={() => setEditing(true)}>
+              <Pencil className="mr-2 h-4 w-4" /> Modifier la fiche
             </Button>
           </>
         }
@@ -128,13 +145,22 @@ function MachineDetail() {
               <MapPin className="h-4 w-4 text-primary" /> {machine.city}, {machine.country}
             </p>
             <p className="mt-3 text-xs text-muted-foreground">{machine.usage}</p>
-            <div className="mt-5 grid gap-2 sm:grid-cols-2">
-              <Button variant="outline" onClick={() => toast.info("Conseiller notifié", { description: "Un commercial vous rappellera sous 2 h." })}>
-                Contacter un conseiller
-              </Button>
-              <Button className="gradient-primary text-primary-foreground" onClick={() => toast.success("Commande initialisée")}>
-                Acheter
-              </Button>
+            <div className="mt-5 rounded-lg border border-border bg-surface p-3">
+              <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                <Truck className="h-3.5 w-3.5 text-primary" /> Fournisseur
+              </p>
+              {supplier ? (
+                <div className="mt-2 space-y-1 text-sm">
+                  <p className="font-medium">{supplier.name}</p>
+                  <p className="text-xs text-muted-foreground">{supplier.contactName} · {supplier.email}</p>
+                  <p className="text-xs text-muted-foreground">{supplier.city}, {supplier.country} · délai {supplier.leadTimeDays} jours</p>
+                  <Button variant="outline" size="sm" className="mt-2" asChild>
+                    <Link to="/admin/fournisseurs">Voir les fournisseurs & stock</Link>
+                  </Button>
+                </div>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">Aucun fournisseur attribué à cette référence.</p>
+              )}
             </div>
           </Panel>
 
@@ -171,6 +197,40 @@ function MachineDetail() {
           </Panel>
         </div>
       </div>
+
+      <MachineFormDialog
+        open={editing}
+        onOpenChange={setEditing}
+        title={`Modifier — ${machine.name}`}
+        initial={machine}
+        onSubmit={(draft) => {
+          updateMachine(machine.id, draft);
+          toast.success("Fiche mise à jour", { description: `${draft.name} a été enregistrée.` });
+        }}
+      />
+
+      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer cette fiche produit ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {machine.name} sera retirée du catalogue commercial et de l'espace client.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                deleteMachine(machine.id);
+                toast.success("Fiche supprimée");
+                navigate({ to: "/admin/catalogue" });
+              }}
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Panel title="Machines similaires">
         <div className="grid gap-4 sm:grid-cols-3">

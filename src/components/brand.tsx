@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import mark from "@/assets/centre3d-mark.png.asset.json";
-import lockup from "@/assets/centre3d-lockup.png.asset.json";
+import mark from "@/assets/centre3d-mark.png";
+import lockup from "@/assets/centre3d-lockup.png";
 
 /** Cube isométrique Centre 3D — logo fourni, jamais redessiné. */
 export function BrandMark({ className }: { className?: string | undefined }) {
@@ -16,7 +16,7 @@ export function BrandMark({ className }: { className?: string | undefined }) {
         className="absolute inset-0 rounded-xl bg-primary/15 blur-md dark:bg-primary-glow/25"
       />
       <img
-        src={mark.url}
+        src={mark}
         alt="Centre 3D"
         width={72}
         height={72}
@@ -43,7 +43,7 @@ export function BrandLockup({
     <span className={cn("flex min-w-0 items-center gap-3", className)}>
       <span className="hidden min-w-0 sm:flex flex-col leading-none">
         <img
-          src={lockup.url}
+          src={lockup}
           alt="Centre 3D"
           width={220}
           height={59}
